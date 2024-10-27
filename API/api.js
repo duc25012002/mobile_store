@@ -1,48 +1,56 @@
-document.querySelector('.btn.btn-secondary').addEventListener('click', function () {
-    let email = document.querySelector('input[name="email"]').value;
-    let password = document.querySelector('input[name="password"]').value;
-    let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    if (!email) {
-        alert('Username is required');
-        return;
+const API_CONFIG = {
+    baseURL: 'https://mobile-store.id.vn',
+    defaultHeaders: {
+        'Content-Type': 'application/json',
     }
-    if (!password) {
-        alert('Password is required');
-        return;
+};
+
+const callApi = async (endpoint, method = 'GET', options = {}) => {
+    try {
+        const queryParams = options.params
+            ? '?' + new URLSearchParams(options.params).toString()
+            : '';
+
+        const url = `${API_CONFIG.baseURL}${endpoint}${queryParams}`;
+
+        const headers = {
+            ...API_CONFIG.defaultHeaders,
+            ...options.headers,
+        };
+
+        const config = {
+            method: method.toUpperCase(),
+            headers,
+        };
+
+        if (method.toUpperCase() !== 'GET' && options.body) {
+            config.body = JSON.stringify(options.body);
+        }
+
+        const response = await fetch(url, config);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+
+    } catch (error) {
+        console.error('API call failed:', error);
+        throw error;
     }
-    this.innerHTML = 'Vui lòng chờ...';
-    this.disabled = true;
-    fetch('https://mobile-store.id.vn/api/user/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': token
-        },
-        body: JSON.stringify({
-            email: email,
-            password: password
-        })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                localStorage.setItem('token', data.access_token);
-                alert('Login success');
-                window.location.href = "index.html";
-            } else {
-                alert('Login failed');
-                this.innerHTML = 'Submit';
-                this.disabled = false;
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Login failed');
-            this.innerHTML = 'Submit';
-            this.disabled = false;
-        })
-        .finally(() => {
-            this.innerHTML = 'Submit';
-            this.disabled = false;
-        });
-});
+};
+
+const apiService = {
+
+    get: (endpoint, params = {}, headers = {}) => {
+        return callApi(endpoint, 'GET', { params, headers });
+    },
+
+    post: (endpoint, body = {}, params = {}, headers = {}) => {
+        return callApi(endpoint, 'POST', { body, params, headers });
+    },
+};
+
+export default apiService;
