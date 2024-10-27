@@ -1,6 +1,3 @@
-// 
-
-
 document.querySelector('.btn.btn-secondary').addEventListener('click', function () {
     let email = document.querySelector('input[name="email"]').value;
     let password = document.querySelector('input[name="password"]').value;
