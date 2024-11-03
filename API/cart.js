@@ -1,31 +1,41 @@
-import apiService from './api.js';
+import apiService from "./api.js";
+import { API_CONFIG } from "./api.js";
+import { formatPrice } from "./products-all.js";
+import { token } from "./api.js";
+import { selectedProductId } from "./products-all.js";
+import { user_id } from "./login.js";   
 
-const token = localStorage.getItem("token")
 
 async function getUserCart() {
-    try {
-        const cartData = await apiService.get('/api/cart', {}, {
-            "Authorization": `Bearer ${token}`
-        });
-        console.log("Giỏ hàng của người dùng:", cartData);
-        console.log("Kiểu dữ liệu của cartData:", Array.isArray(cartData), cartData);
-        const tbody = document.querySelector('tbody');
+  try {
+    const cartData = await apiService.get(
+      "/api/cart",
+      {},
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+    console.log("Giỏ hàng của người dùng:", cartData);
+    const tbody = document.querySelector("tbody");
 
-        tbody.innerHTML = '';
+    tbody.innerHTML = "";
 
-        if (Array.isArray(cartData) && cartData.length > 0) {
-            cartData.forEach(item => {
-                const row = document.createElement('tr');
+    if (Array.isArray(cartData.data) && cartData.data.length > 0) {
+      cartData.data.forEach((item) => {
+        const row = document.createElement("tr");
 
-                row.innerHTML = `
+        row.innerHTML = `
                     <td>
-                        <a href="product-details.html"><img src="${item.image}" alt="Cart Product Image" title="${item.name}" class="img-thumbnail"></a>
+                        <a href="product-details.html">
+                            <img
+                            src="${API_CONFIG.baseURL}/${item.variant_images}"
+                            alt="Cart Product Image" title="${item.name}"
+                            class="img-thumbnail"
+                            >
+                        </a>
                     </td>
                     <td>
-                        <a href="product-details.html">${item.name}</a>
-                        <span>Delivery Date: ${item.deliveryDate}</span>
-                        <span>Color: ${item.color}</span>
-                        <span>Reward Points: ${item.rewardPoints}</span>
+                        <a href="product-details.html">${item.product}</a>
                     </td>
                     <td>${item.quantity}</td>
                     <td>
@@ -45,40 +55,47 @@ async function getUserCart() {
                             </span>
                         </div>
                     </td>
-                    <td>$${item.price.toFixed(2)}</td>
-                    <td>$${(item.price * item.quantity).toFixed(2)}</td>
+                    <td>${formatPrice(item.price)}</td>
+                    <td>${formatPrice(item.totalAmount)}</td>
                 `;
 
-                tbody.appendChild(row);
-            });
-        } else {
-            tbody.innerHTML = '<tr><td colspan="6" class="text-center">Giỏ hàng hiện trống.</td></tr>';
-        }
-    } catch (error) {
-        if (error.message.includes('401')) {
-            console.log("Người dùng chưa được xác thực.");
-        } else {
-            console.error("Lỗi khi lấy giỏ hàng:", error);
-        }
+        tbody.appendChild(row);
+      });
+    } else {
+      tbody.innerHTML =
+        '<tr><td colspan="6" class="text-center">Giỏ hàng hiện trống.</td></tr>';
     }
+  } catch (error) {
+    if (error.message.includes("401")) {
+      console.log("Người dùng chưa được xác thực.");
+    } else {
+      console.log("Chưa lấy giỏ hàng");
+    }
+  }
 }
 
-async function updateUserCart(productVariantId, quantity) {
-    try {
-        const body = {
-            "product_variant_id": productVariantId,
-            "quantity": quantity
-        };
+export async function updateUserCart(userId, productVariantId, quantity) {
+  try {
+    const body = {
+      user_Id: userId,
+      product_variant_id: productVariantId,
+      quantity: quantity,
+    };
 
-        const updatedCart = await apiService.post('/api/cart/update', body, {}, {
-            "Authorization": `Bearer ${token}`
-        });
+    const updatedCart = await apiService.post(
+      "/api/cart/update",
+      body,
+      {},
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
 
-        console.log("Giỏ hàng sau khi cập nhật:", updatedCart);
-    } catch (error) {
-        console.error("Lỗi khi cập nhật giỏ hàng:", error);
-    }
+    console.log("Giỏ hàng sau khi cập nhật:", updatedCart);
+  } catch (error) {
+    console.error("Lỗi khi cập nhật giỏ hàng:", error);
+  }
 }
 
 getUserCart();
-
+// updateUserCart(user_id, selectedProductId, 1);

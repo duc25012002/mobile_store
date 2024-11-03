@@ -1,9 +1,11 @@
-const API_CONFIG = {
+export const API_CONFIG = {
     baseURL: 'https://mobile-store.id.vn',
     defaultHeaders: {
         'Content-Type': 'application/json',
     }
 };
+
+export const token = localStorage.getItem("token")
 
 const callApi = async (endpoint, method = 'GET', options = {}) => {
     try {
