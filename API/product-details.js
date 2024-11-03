@@ -3,6 +3,8 @@ import { API_CONFIG } from "./api.js";
 import { token } from "./api.js";
 import { selectedProductId } from "./products-all.js";
 import { formatPrice } from "./products-all.js";
+import { updateUserCart } from "./cart.js";
+import { user_id } from "./login.js";
 
 async function getProductDetail(productId) {
   console.log("Lấy chi tiết sản phẩm với ID:", productId);
@@ -37,7 +39,7 @@ function displayProductDetail(productData) {
     );
     const availabilityStatus = isInStock ? "In Stock" : "Out of Stock";
     console.log(availabilityStatus);
-    
+
     productDetailContainer.innerHTML = `
             <div class="container-fluid">
                 <div class="row">
@@ -153,7 +155,7 @@ function displayProductDetail(productData) {
                         <div class="pro-quantity-box mb-30">
                         <div class="qty-boxx">
                             <label>qty :</label>
-                            <input type="text" placeholder="0">
+                            <input type="text" placeholder="1">
                             <button class="btn-cart lg-btn">add to cart</button>
                         </div>
                         </div>
@@ -201,6 +203,25 @@ function displayProductDetail(productData) {
                 </div>
             </div>
         `;
+
+    document.querySelector(".btn-cart").addEventListener("click", () => {
+      const quantityInput = document.querySelector(
+        ".qty-boxx input[type='text']"
+      );
+      const quantity = parseInt(quantityInput.value) || 1;
+
+      if (!selectedProductId) {
+        console.error("Không có ID sản phẩm.");
+      } else if (!user_id) {
+        console.error("Không có ID người dùng.");
+      } else if (isNaN(quantity) || quantity <= 0) {
+        console.error(
+          "Số lượng không hợp lệ. Vui lòng nhập số lượng lớn hơn 0."
+        );
+      } else {
+        updateUserCart(user_id, selectedProductId, quantity);
+      }
+    });
   } else {
     console.error("Dữ liệu sản phẩm không hợp lệ.");
     productDetailContainer.innerHTML = `<p>Không thể lấy thông tin sản phẩm.</p>`;

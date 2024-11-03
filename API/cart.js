@@ -3,8 +3,7 @@ import { API_CONFIG } from "./api.js";
 import { formatPrice } from "./products-all.js";
 import { token } from "./api.js";
 import { selectedProductId } from "./products-all.js";
-import { user_id } from "./login.js";   
-
+import { user_id } from "./login.js";
 
 async function getUserCart() {
   try {
@@ -26,7 +25,9 @@ async function getUserCart() {
 
         row.innerHTML = `
                     <td>
-                        <a href="product-details.html">
+                        <a href="product-details.html" product-card-id="${
+                          item.product_variant_id
+                        }">
                             <img
                             src="${API_CONFIG.baseURL}/${item.variant_images}"
                             alt="Cart Product Image" title="${item.name}"
@@ -60,6 +61,14 @@ async function getUserCart() {
                 `;
 
         tbody.appendChild(row);
+
+        const removeButton = row.querySelector(".btn.btn-danger.pull-right");
+        removeButton.addEventListener("click", async () => {
+          console.log("Nút đã được nhấn để xóa sản phẩm!");
+          await updateUserCart(user_id, item.product_variant_id, 0);
+          getUserCart();
+          console.log("Giao diện đã được cập nhật!");
+        });
       });
     } else {
       tbody.innerHTML =
@@ -92,10 +101,12 @@ export async function updateUserCart(userId, productVariantId, quantity) {
     );
 
     console.log("Giỏ hàng sau khi cập nhật:", updatedCart);
+    if (updatedCart.message) {
+      alert("Thông báo: " + updatedCart.message);
+    }
   } catch (error) {
     console.error("Lỗi khi cập nhật giỏ hàng:", error);
   }
 }
 
 getUserCart();
-// updateUserCart(user_id, selectedProductId, 1);

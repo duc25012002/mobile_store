@@ -34,7 +34,7 @@ function renderProducts(products) {
   products.forEach((product) => {
     console.log("bbb", product.variants[0].id);
     const discount = Number(product.discount).toFixed(0);
-    const productHTML = `
+    let productHTML = `
         <div class="owl-item active" style="width: 217px; margin-right: 30px;">
             <div class="product-item">
                 <div class="product-thumb">
@@ -109,10 +109,9 @@ function renderProducts(products) {
 
   document.querySelectorAll(".btn-cart").forEach((button) => {
     button.addEventListener("click", (event) => {
-      const productId = button.getAttribute("data-product-id");
+      console.log("user", user_id);
 
-      if (productId) {
-        console.log("Product added to cart:", productId);
+      if (selectedProductId && user_id) {
         updateUserCart(user_id, selectedProductId, 1);
       } else {
         console.error("Không có ID sản phẩm.");

@@ -1,32 +1,29 @@
 import apiService from "./api.js";
 import { token } from "./api.js";
 
-const getUserId = async () => {
-  try {
-    const response = await apiService.get(
-      "/api/user-id",
-      {},
-      {
-        Authorization: `Bearer ${token}`,
-      }
-    );
+export let user_id;
 
-    const userId = response.data.id.original.user_id;
-    if (userId) {
-      return userId;
-    } else {
-      throw new Error("user_id not found in the response");
-    }
-  } catch (error) {
-    console.error("Failed to fetch user_id:", error);
-    throw error;
-  }
+const getUserId = async () => {
+  const response = await apiService.get("/api/user-id", {}, {
+    Authorization: `Bearer ${token}`,
+    mode: "no-cors",
+  });
+
+  return response.data.id;
 };
 
-export const user_id = getUserId();
+getUserId()
+  .then(id => {
+    user_id = id;
+    console.log("user_id:", user_id);
+  })
+  .catch(error => {
+    console.error("Error fetching user_id:", error);
+  });
+
 
 document.addEventListener("DOMContentLoaded", () => {
-  const loginButton = document.getElementById(".btn.btn-secondary");
+  const loginButton = document.querySelector(".btn.btn-secondary");
 
   if (loginButton) {
     loginButton.addEventListener("click", async function () {
@@ -55,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (result.status === "success") {
           localStorage.setItem("token", result.access_token);
-          // alert('Login success');
+          alert('Login success');
           window.location.href = "index.html";
         } else {
           alert("Login failed");
