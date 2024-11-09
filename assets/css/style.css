@@ -3499,6 +3499,10 @@ a.shop-btn:hover {
   width: 30px;
 }
 
+.c-white{
+  background-color: white;
+}
+
 .c-red {
   background: red;
 }

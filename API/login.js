@@ -1,24 +1,50 @@
 import apiService from "./api.js";
 import { token } from "./api.js";
+import { API_CONFIG } from "./api.js";
 
-export let user_id;
+export let user_id = localStorage.getItem("user_id");
 
 const getUserId = async () => {
-  const response = await apiService.get("/api/user-id", {}, {
-    Authorization: `Bearer ${token}`,
-    mode: "no-cors",
-  });
+  if (!token) {
+    alert("Bạn cần đăng nhập để thực hiện hành động này.");
+    window.location.href = "/mobile_store/login.html";
+    return null;
+  }
 
-  return response.data.id;
+  try {
+    const response = await apiService.get(
+      "/api/user-id",
+      {},
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+
+    console.log("Response từ API:", response);
+    console.log("Dữ liệu trong response:", response.data);
+    console.log("User ID:", response.data.id);
+    return response.data.id;
+  } catch (error) {
+    console.error("Error fetching user_id:", error);
+    alert("Có lỗi xảy ra khi lấy thông tin người dùng. Vui lòng thử lại.");
+    return null;
+  }
 };
 
-getUserId()
-  .then(id => {
-    user_id = id;
-  })
-  .catch(error => {
-    console.error("Error fetching user_id:", error);
-  });
+const handleUserId = async () => {
+  const currentPath = window.location.pathname;
+
+  if (currentPath.includes("cart") || currentPath.includes("checkout")) {
+    const id = await getUserId();
+    if (id) {
+      localStorage.setItem("user_id", id);
+    } else {
+      console.log("Không lấy được user_id");
+    }
+  }
+};
+
+handleUserId();
 
 document.addEventListener("DOMContentLoaded", () => {
   const loginButton = document.querySelector(".btn.btn-secondary");
@@ -50,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (result.status === "success") {
           localStorage.setItem("token", result.access_token);
-          alert('Login success');
+          alert("Login success");
           window.location.href = "index.html";
         } else {
           alert("Login failed");

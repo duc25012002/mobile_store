@@ -160,8 +160,12 @@
                       <span class="lnr lnr-cart"></span
                       ><span class="count">2</span>my cart
                     </button>
-                    <ul class="mini-cart-drop-down ha-dropdown">
-                      <li class="mb-30">
+                    <ul id="mini_cart" class="mini-cart-drop-down ha-dropdown">
+                      <li
+                        id="mini_cart_info"
+                        class="mb-30"
+                        style="flex-direction: column"
+                      >
                         <div class="cart-img">
                           <a href="product-details.html"
                             ><img alt="" src="assets/img/cart/cart-1.jpg"
@@ -183,13 +187,13 @@
                         <div class="subtotal-text">Sub-total:</div>
                         <div class="subtotal-price">£48.94</div>
                       </li>
-                      <li>
+                      <!-- <li>
                         <div class="subtotal-text">Eco Tax (-2.00):</div>
                         <div class="subtotal-price">£1.51</div>
-                      </li>
+                      </li> -->
                       <li>
-                        <div class="subtotal-text">Vat (20%):</div>
-                        <div class="subtotal-price">£9.79</div>
+                        <div class="subtotal-text">discount:</div>
+                        <div class="subtotal-price">10%</div>
                       </li>
                       <li>
                         <div class="subtotal-text">Total:</div>
@@ -830,7 +834,7 @@
                               <td>Total</td>
                             </tr>
                           </thead>
-                          <tbody>
+                          <tbody id="card-body">
                             <tr>
                               <td>
                                 <a href="product-details.html"
@@ -975,7 +979,7 @@
                       </div>
                     </form>
 
-                    <div class="cart-accordion-wrapper mt-full mt-40">
+                    <!-- <div class="cart-accordion-wrapper mt-full mt-40">
                       <h3>What would you like to do next?</h3>
                       <p>
                         Choose if you have a discount code or reward points you
@@ -1187,7 +1191,7 @@
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
 
                     <div class="cart-amount-wrapper">
                       <div class="row">
@@ -1196,12 +1200,16 @@
                             <tbody>
                               <tr>
                                 <td><strong>Sub-Total:</strong></td>
-                                <td>$860.00</td>
+                                <td>
+                                  <span class="totalAmount">$860.00</span>
+                                </td>
                               </tr>
                               <tr>
                                 <td><strong>Total:</strong></td>
                                 <td>
-                                  <span class="color-primary">$860.00</span>
+                                  <span class="totalAmount color-primary"
+                                    >$860.00</span
+                                  >
                                 </td>
                               </tr>
                             </tbody>
@@ -1435,7 +1443,5 @@
     <script src="assets/js/main.js"></script>
     <script src="./API/cart.js" type="module"></script>
     <script src="./API/logout.js" type="module"></script>
-    <script src="./API/login.js" type="module"></script>
-    <script src="./API/api.js" type="module"></script>
   </body>
 </html>

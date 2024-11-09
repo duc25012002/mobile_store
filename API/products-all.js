@@ -107,6 +107,11 @@ function renderProducts(products) {
   document.querySelectorAll(".btn-cart").forEach((button) => {
     button.addEventListener("click", (event) => {
       console.log("user", user_id);
+      if (!user_id) {
+        alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.");
+        window.location.href = "/mobile_store/login.html";
+        return;
+      }
 
       if (selectedProductId && user_id) {
         updateUserCart(user_id, selectedProductId, 1);
