@@ -38,7 +38,6 @@ function displayProductDetail(productData) {
       (variant) => variant.availability !== "0" && variant.stock !== "0"
     );
     const availabilityStatus = isInStock ? "In Stock" : "Out of Stock";
-    console.log(availabilityStatus);
 
     productDetailContainer.innerHTML = `
             <div class="container-fluid">
@@ -227,8 +226,6 @@ function displayProductDetail(productData) {
     productDetailContainer.innerHTML = `<p>Không thể lấy thông tin sản phẩm.</p>`;
   }
 }
-
-console.log(selectedProductId);
 
 if (selectedProductId) {
   getProductDetail(selectedProductId);

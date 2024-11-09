@@ -15,12 +15,10 @@ const getUserId = async () => {
 getUserId()
   .then(id => {
     user_id = id;
-    console.log("user_id:", user_id);
   })
   .catch(error => {
     console.error("Error fetching user_id:", error);
   });
-
 
 document.addEventListener("DOMContentLoaded", () => {
   const loginButton = document.querySelector(".btn.btn-secondary");
@@ -67,7 +65,5 @@ document.addEventListener("DOMContentLoaded", () => {
         this.disabled = false;
       }
     });
-  } else {
-    console.log("Login button not found or already logged in");
   }
 });

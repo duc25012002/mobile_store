@@ -1,40 +1,5 @@
 import apiService from './api.js';
 
-// const logout = async () => {
-//     try {
-//         const result = await apiService.post('/api/logout', {}, {}, {
-//             'Authorization': `Bearer ${token}`, mode: no - cors
-//         });
-
-//         // if (result.ok) {
-//         //     localStorage.removeItem('token');
-//         //     dropdownElement.innerHTML = `
-//         //       <li><a href="register.html">Register</a></li>
-//         //       <li><a href="login.html">Login</a></li>
-//         //     `;
-
-//         //     alert('Logout successful');
-//         //     window.location.href = "/login.html";
-//         // } else {
-//         //     alert('Logout failed. Please try again.');
-//         // }
-//         if (result.ok) {
-//             localStorage.removeItem("token");
-//             console.log("Logout successful");
-//         } else {
-//             const data = await result.json();
-//             console.error("Logout failed:", data.error);
-//             if (result.status === 401) {
-//                 localStorage.removeItem("token");
-//             }
-//         }
-//     } catch (error) {
-//         console.error("Error during logout:", error);
-//         localStorage.removeItem("token");
-//     }
-// };
-
-
 const token = localStorage.getItem("token");
 const dropdownElement = document.querySelector(
     "#__session .box-dropdown.ha-dropdown"

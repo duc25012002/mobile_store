@@ -6,8 +6,6 @@ import { updateUserCart } from "./cart.js";
 
 export let selectedProductId = localStorage.getItem("selectedProductId");
 
-console.log("aaa:", selectedProductId);
-
 export const formatPrice = (price) =>
   new Intl.NumberFormat("vi-VN", {
     style: "currency",
@@ -32,7 +30,6 @@ function renderProducts(products) {
   productListElement.innerHTML = "";
 
   products.forEach((product) => {
-    console.log("bbb", product.variants[0].id);
     const discount = Number(product.discount).toFixed(0);
     let productHTML = `
         <div class="owl-item active" style="width: 217px; margin-right: 30px;">

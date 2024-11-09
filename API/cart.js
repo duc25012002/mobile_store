@@ -22,7 +22,6 @@ async function getUserCart() {
     if (Array.isArray(cartData.data) && cartData.data.length > 0) {
       cartData.data.forEach((item) => {
         const row = document.createElement("tr");
-
         row.innerHTML = `
                     <td>
                         <a href="product-details.html" product-card-id="${
@@ -36,30 +35,31 @@ async function getUserCart() {
                         </a>
                     </td>
                     <td>
-                        <a href="product-details.html">${item.product}</a>
-                    </td>
-                    <td>${item.quantity}</td>
-                    <td>
-                        <div class="input-group btn-block">
-                            <div class="product-qty me-3">
-                                <input type="text" value="${item.quantity}">
-                                <span class="dec qtybtn"><i class="fa fa-minus"></i></span>
-                                <span class="inc qtybtn"><i class="fa fa-plus"></i></span>
-                            </div>
-                            <span class="input-group-btn">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-refresh"></i>
-                                </button>
-                                <button type="button" class="btn btn-danger pull-right">
-                                    <i class="fa fa-times-circle"></i>
-                                </button>
-                            </span>
-                        </div>
-                    </td>
-                    <td>${formatPrice(item.price)}</td>
-                    <td>${formatPrice(item.totalAmount)}</td>
-                `;
-
+                          <a href="product-details.html"  product-card-id="${
+                            item.product_id
+                          }">${item.product}</a>
+                      </td>
+                      <td>${item.quantity}</td>
+                      <td>
+                          <div class="input-group btn-block">
+                              <div class="product-qty me-3">
+                                  <input type="text" value="${item.quantity}">
+                                  <span class="dec qtybtn"><i class="fa fa-minus"></i></span>
+                                  <span class="inc qtybtn"><i class="fa fa-plus"></i></span>
+                              </div>
+                              <span class="input-group-btn">
+                                  <button type="submit" class="btn btn-primary">
+                                      <i class="fa fa-refresh"></i>
+                                  </button>
+                                  <button type="button" class="btn btn-danger pull-right">
+                                      <i class="fa fa-times-circle"></i>
+                                  </button>
+                              </span>
+                          </div>
+                      </td>
+                      <td>${formatPrice(item.price)}</td>
+                      <td>${formatPrice(item.totalAmount)}</td>
+                  `;
         tbody.appendChild(row);
 
         const removeButton = row.querySelector(".btn.btn-danger.pull-right");
@@ -77,8 +77,6 @@ async function getUserCart() {
   } catch (error) {
     if (error.message.includes("401")) {
       console.log("Người dùng chưa được xác thực.");
-    } else {
-      console.log("Chưa lấy giỏ hàng");
     }
   }
 }
