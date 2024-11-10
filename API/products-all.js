@@ -3,6 +3,7 @@ import { API_CONFIG } from "./api.js";
 import { token } from "./api.js";
 import { user_id } from "./login.js";
 import { updateUserCart } from "./cart.js";
+import { addToCart_homepage } from "./cart.js";
 
 export let selectedProductId = localStorage.getItem("selectedProductId");
 
@@ -113,7 +114,7 @@ function renderProducts(products) {
       }
 
       if (selectedProductId) {
-        updateUserCart(user_id, selectedProductId, 1);
+        addToCart_homepage(user_id, selectedProductId, 1);
       } else {
         console.error("Không có ID sản phẩm.");
       }
