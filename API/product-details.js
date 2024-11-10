@@ -239,8 +239,6 @@ function displayProductDetail(productData) {
   }
 }
 
-console.log("index", variant_Index);
-
 if (selectedProductId) {
   getProductDetail(selectedProductId);
 } else {
