@@ -210,9 +210,9 @@ function displayProductDetail(productData) {
 
       if (!selectedProductId) {
         console.error("Không có ID sản phẩm.");
-      } else if (!user_id) {
+      } else if (!token) {
         alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.");
-        window.location.href = "..//login.html";
+        window.location.href = "login.html";
         return;
       } else if (isNaN(quantity) || quantity <= 0) {
         console.error(

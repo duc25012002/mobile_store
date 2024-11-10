@@ -106,14 +106,13 @@ function renderProducts(products) {
 
   document.querySelectorAll(".btn-cart").forEach((button) => {
     button.addEventListener("click", (event) => {
-      console.log("user", user_id);
-      if (!user_id) {
+      if (!token) {
         alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.");
-        window.location.href = "../login.html";
+        window.location.href = "login.html";
         return;
       }
 
-      if (selectedProductId && user_id) {
+      if (selectedProductId) {
         updateUserCart(user_id, selectedProductId, 1);
       } else {
         console.error("Không có ID sản phẩm.");

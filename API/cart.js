@@ -231,21 +231,15 @@ function attachEventListeners(row, item) {
 }
 
 async function loadAndRenderCart() {
-  if (user_id) {
-    try {
-      const cartItems = await getUserCart();
-      console.log("Tất cả sản phẩm trong giỏ hàng:", cartItems);
-      renderCartTable(cartItems);
-      renderProductList(cartItems);
-      renderTotalAmount(cartItems);
-    } catch (error) {
-      console.error("Lỗi khi lấy giỏ hàng:", error);
-      alert("Không thể tải giỏ hàng. Vui lòng thử lại.");
-    }
-  } else {
-    console.log("Bạn cần đăng nhập để xem giỏ hàng.");
-    alert("Vui lòng đăng nhập để tiếp tục.");
-    window.location.href = "../login.html";
+  try {
+    const cartItems = await getUserCart();
+    console.log("Tất cả sản phẩm trong giỏ hàng:", cartItems);
+    renderCartTable(cartItems);
+    renderProductList(cartItems);
+    renderTotalAmount(cartItems);
+  } catch (error) {
+    console.error("Lỗi khi lấy giỏ hàng:", error);
+    alert("Không thể tải giỏ hàng. Vui lòng thử lại.");
   }
 }
 

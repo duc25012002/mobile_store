@@ -54,13 +54,13 @@ function checkAuthRoutes() {
   const currentPage = window.location.pathname;
 
   if (token && currentPage.includes("/login.html")) {
-    window.location.href = "/index.html";
+    window.location.href = "index.html";
     return;
   }
 
   const protectedPages = ["/profile.html"];
   if (!token && protectedPages.some((page) => currentPage.includes(page))) {
-    window.location.href = "/login.html";
+    window.location.href = "login.html";
     return;
   }
 }
