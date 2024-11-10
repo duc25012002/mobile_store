@@ -109,7 +109,7 @@ function renderProducts(products) {
       console.log("user", user_id);
       if (!user_id) {
         alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.");
-        window.location.href = "/mobile_store/login.html";
+        window.location.href = "../login.html";
         return;
       }
 

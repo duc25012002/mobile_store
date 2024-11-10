@@ -212,7 +212,7 @@ function displayProductDetail(productData) {
         console.error("Không có ID sản phẩm.");
       } else if (!user_id) {
         alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.");
-        window.location.href = "/mobile_store/login.html";
+        window.location.href = "..//login.html";
         return;
       } else if (isNaN(quantity) || quantity <= 0) {
         console.error(

@@ -245,7 +245,7 @@ async function loadAndRenderCart() {
   } else {
     console.log("Bạn cần đăng nhập để xem giỏ hàng.");
     alert("Vui lòng đăng nhập để tiếp tục.");
-    window.location.href = "/mobile_store/login.html";
+    window.location.href = "../login.html";
   }
 }
 

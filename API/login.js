@@ -7,7 +7,7 @@ export let user_id = localStorage.getItem("user_id");
 const getUserId = async () => {
   if (!token) {
     alert("Bạn cần đăng nhập để thực hiện hành động này.");
-    window.location.href = "/mobile_store/login.html";
+    window.location.href = "../login.html";
     return null;
   }
 
