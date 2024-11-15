@@ -1736,6 +1736,10 @@ span.yellow {
 /* home2 product-wrapper  */
 
 /* tab problem fix css */
+/* .tab-content {
+  height: 100px;
+} */
+
 .tab-content .tab-pane {
   display: block;
   height: 0;
@@ -3498,7 +3502,7 @@ a.shop-btn:hover {
   width: 30px;
 }
 
-.c-white{
+.c-white {
   background-color: white;
 }
 

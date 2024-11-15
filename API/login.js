@@ -6,7 +6,7 @@ export let user_id = localStorage.getItem("user_id");
 
 const getUserId = async () => {
   if (!token) {
-    alert("Bạn cần đăng nhập để thực hiện hành động này.");
+    toastr.warning("Bạn cần đăng nhập để thực hiện hành động này.");
     window.location.href = "login.html";
     return null;
   }
@@ -22,7 +22,9 @@ const getUserId = async () => {
     return response.data.id;
   } catch (error) {
     console.error("Error fetching user_id:", error);
-    alert("Có lỗi xảy ra khi lấy thông tin người dùng. Vui lòng thử lại.");
+    toastr.error(
+      "Có lỗi xảy ra khi lấy thông tin người dùng. Vui lòng thử lại."
+    );
     return null;
   }
 };
@@ -35,12 +37,13 @@ const handleUserId = async () => {
     if (id) {
       localStorage.setItem("user_id", id);
     } else {
-      console.log("Không lấy được user_id");
+      toastr.warning("Không thể lấy thông tin người dùng.");
     }
   }
 };
 
 handleUserId();
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const loginButton = document.querySelector(".btn.btn-secondary");
@@ -51,11 +54,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const password = document.querySelector('input[name="password"]').value;
 
       if (!email) {
-        alert("Username is required");
+        toastr.warning("Vui lòng nhập tên người dùng.");
         return;
       }
       if (!password) {
-        alert("Password is required");
+        toastr.warning("Vui lòng nhập mật khẩu.");
         return;
       }
 
@@ -70,20 +73,24 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const result = await apiService.post("/api/user/login", data);
 
-        if (result.status === "success") {
+        if (result && result.status === "success") {
           localStorage.setItem("token", result.access_token);
-          alert("Login success");
-          window.location.href = "index.html";
+          toastr.success("Đăng nhập thành công!");
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 1000);
         } else {
-          alert("Login failed");
-          this.innerHTML = "Submit";
-          this.disabled = false;
+          toastr.error(
+            "Đăng nhập thất bại. Vui lòng kiểm tra thông tin và thử lại."
+          );
         }
       } catch (error) {
         console.error("Error:", error);
-        alert("Login failed");
+        toastr.error(
+          "Có lỗi xảy ra trong quá trình đăng nhập. Vui lòng thử lại."
+        );
       } finally {
-        this.innerHTML = "Submit";
+        this.innerHTML = "Đăng nhập";
         this.disabled = false;
       }
     });

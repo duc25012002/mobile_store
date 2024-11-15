@@ -1,68 +1,33 @@
 import apiService from "./api.js";
 import { selectedProductId } from "./products-all.js";
-import { token } from "./api.js";
-import { API_CONFIG } from "./api.js";
+import { token, API_CONFIG } from "./api.js";
 
-export const getProductReviews = async () => {
-  try {
-    const response = await apiService.get("/api/reviews");
-
-    if (response.status === "success") {
-      return response.data;
-    } else {
-      throw new Error("Không thể lấy danh sách đánh giá: " + response.message);
-    }
-  } catch (error) {
-    console.error("Lỗi khi lấy đánh giá sản phẩm:", error.message);
-    throw error;
-  }
+const handleApiError = (error, context = "") => {
+  console.error(`Lỗi trong ${context}:`, error.message);
 };
 
-export const getProductReviewsById = async (productId) => {
-  if (!productId) {
-    console.error("ID sản phẩm không hợp lệ.");
-    return;
-  }
-
+const getProductReviewsById = async (productId) => {
   try {
     const response = await apiService.get(`/api/review/${productId}`);
-
     if (response.status === "success") {
-      return response.data;
+      return response.data || [];
     } else {
-      throw new Error("Không thể lấy danh sách đánh giá: " + response.message);
+      throw new Error(response.message || "Không thể lấy danh sách đánh giá.");
     }
   } catch (error) {
-    console.error(
-      `Lỗi khi lấy đánh giá cho sản phẩm ID ${productId}:`,
-      error.message
-    );
-    throw error;
+    handleApiError(error, "lấy đánh giá sản phẩm");
+    return [];
   }
 };
 
-export const saveReview = async (productId, rating, comment) => {
-  if (!productId || typeof productId !== "string" || productId.trim() === "") {
-    console.error("ID sản phẩm không hợp lệ.");
+const saveReview = async (productId, rating, comment) => {
+  if (!productId || !rating || !comment) {
+    console.error("Dữ liệu đánh giá không hợp lệ.");
+    toastr.error("Dữ liệu đánh giá không hợp lệ.", "Lỗi");
     return;
   }
 
-  if (rating < 1 || rating > 5 || !Number.isInteger(rating)) {
-    console.error("Đánh giá phải là một số nguyên từ 1 đến 5.");
-    return;
-  }
-
-  if (!comment || comment.length > 255) {
-    console.error("Bình luận không hợp lệ. Độ dài tối đa là 255 ký tự.");
-    return;
-  }
-
-  const body = {
-    product_id: productId,
-    rating: rating,
-    comment: comment,
-  };
-
+  const body = { product_id: productId, rating, comment };
   try {
     const response = await apiService.post(
       "/api/product-detail/review",
@@ -70,34 +35,69 @@ export const saveReview = async (productId, rating, comment) => {
       {},
       { Authorization: `Bearer ${token}` }
     );
-
     if (response.status === "success") {
-      console.log("Đánh giá đã được lưu thành công:", response);
+      toastr.success("Đánh giá của bạn đã được gửi thành công!", "Thành công");
       return response;
     } else {
-      throw new Error("Không thể lưu đánh giá: " + response.message);
+      throw new Error(response.message || "Không thể lưu đánh giá.");
     }
   } catch (error) {
-    console.error("Lỗi khi lưu đánh giá:", error.message);
+    handleApiError(error, "lưu đánh giá");
     throw error;
   }
 };
 
-getProductReviewsById(selectedProductId)
-  .then((reviews) => {
-    console.log("Đánh giá sản phẩm có ID:", selectedProductId, reviews);
-  })
-  .catch((error) => {
-    console.error("Lỗi trong quá trình lấy đánh giá:", error);
-  });
+const updateReviews = async (productId) => {
+  try {
+    const reviews = await getProductReviewsById(productId);
+    const reviewsContainer = document.querySelector("#reviews-table-body");
+    const reviewTab = document.getElementById("nav_review");
 
-getProductReviews()
-  .then((reviews) => {
-    console.log("Danh sách đánh giá sản phẩm:", reviews);
-  })
-  .catch((error) => {
-    console.error("Lỗi trong quá trình lấy đánh giá:", error);
+    if (reviewTab) {
+      reviewTab.textContent = `Reviews (${reviews.length})`;
+    }
+
+    reviewsContainer.innerHTML = reviews
+      .map(
+        ({ user, created_at, comment, rating }) => `
+        <tr>
+          <td><strong>${user.name}</strong></td>
+          <td class="text-end">${formatDate(created_at)}</td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <p>${comment}</p>
+            <div class="product-ratings">
+              <ul class="ratting d-flex mt-2">
+                ${renderStars(rating)}
+              </ul>
+            </div>
+          </td>
+        </tr>
+      `
+      )
+      .join("");
+  } catch (error) {
+    handleApiError(error, "cập nhật đánh giá");
+  }
+};
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("vi-VN", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
   });
+};
+
+const renderStars = (rating) => {
+  return Array.from({ length: 5 })
+    .map(
+      (_, i) => `<li><i class="fa fa-star${i < rating ? "" : "-o"}"></i></li>`
+    )
+    .join("");
+};
 
 document
   .querySelector(".review-form")
@@ -105,77 +105,33 @@ document
     event.preventDefault();
 
     if (!token) {
-      alert("Vui lòng đăng nhập trước khi gửi đánh giá!");
-      window.location.href = "login.html";
+      toastr.warning("Vui lòng đăng nhập trước khi gửi đánh giá!");
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 1000);
       return;
     }
 
     const comment = document.getElementById("comment").value.trim();
-    const rating = document.querySelector(
-      'input[name="rating"]:checked'
-    )?.value;
+    const rating = parseInt(
+      document.querySelector('input[name="rating"]:checked')?.value
+    );
 
     if (!comment || !rating) {
-      alert("Vui lòng điền đầy đủ thông tin!");
+      toastr.warning("Vui lòng điền đầy đủ thông tin!");
       return;
     }
 
     try {
-      const response = await saveReview(
-        selectedProductId,
-        parseInt(rating),
-        comment
-      );
-      console.log("Đánh giá đã được lưu thành công:", response);
-      alert("Đánh giá của bạn đã được gửi thành công!");
-      document.getElementById("review-form").reset();
-    } catch (error) {}
+      await saveReview(selectedProductId, rating, comment);
+      // alert("Đánh giá của bạn đã được gửi thành công!");
+      document.querySelector(".review-form").reset();
+      updateReviews(selectedProductId);
+    } catch (error) {
+      toastr.error(`Lỗi khi gửi đánh giá: ${error.message}`, "Lỗi");
+      console.error("Lỗi khi gửi đánh giá:", error.message);
+    }
   });
 
-const displayReviews = async (productId) => {
-  const reviews = await getProductReviewsById(productId);
-  const reviewsContainer = document.querySelector("#reviews-table-body");
-
-  reviewsContainer.innerHTML = "";
-
-  reviews.forEach((review) => {
-    const { user, created_at, comment, rating } = review;
-
-    const reviewRow = document.createElement("tr");
-
-    const nameDateRow = document.createElement("tr");
-    nameDateRow.innerHTML = `
-        <td><strong>${user.name}</strong></td>
-        <td class="text-end">${formatDate(created_at)}</td>
-      `;
-    reviewsContainer.appendChild(nameDateRow);
-    const commentRow = document.createElement("tr");
-    commentRow.innerHTML = `
-        <td colspan="2">
-          <p>${comment}</p>
-          <div class="product-ratings">
-            <ul class="ratting d-flex mt-2">
-              ${renderStars(rating)} <!-- Gọi hàm renderStars để tạo sao -->
-            </ul>
-          </div>
-        </td>
-      `;
-    reviewsContainer.appendChild(commentRow);
-  });
-};
-
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const options = { year: "numeric", month: "2-digit", day: "2-digit" };
-  return date.toLocaleDateString("vi-VN", options);
-};
-
-const renderStars = (rating) => {
-  let stars = "";
-  for (let i = 0; i < 5; i++) {
-    stars += `<li><i class="fa fa-star${i < rating ? "" : "-o"}"></i></li>`;
-  }
-  return stars;
-};
-
-displayReviews(selectedProductId);
+// Gọi cập nhật khi trang tải
+updateReviews(selectedProductId);

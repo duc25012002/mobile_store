@@ -39,6 +39,7 @@ function checkLoginStatus() {
       .addEventListener("click", async function (event) {
         event.preventDefault();
         await logout();
+        toastr.success("Bạn đã đăng xuất thành công!");
         window.location.href = "index.html";
       });
   } else {
@@ -54,13 +55,17 @@ function checkAuthRoutes() {
   const currentPage = window.location.pathname;
 
   if (token && currentPage.includes("/login.html")) {
+    toastr.info("Bạn đã đăng nhập rồi!");
     window.location.href = "index.html";
     return;
   }
 
   const protectedPages = ["/profile.html"];
   if (!token && protectedPages.some((page) => currentPage.includes(page))) {
-    window.location.href = "login.html";
+    toastr.warning("Vui lòng đăng nhập để tiếp tục!");
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 1500);
     return;
   }
 }
@@ -68,7 +73,7 @@ function checkAuthRoutes() {
 async function logout() {
   try {
     if (!token) {
-      console.warn("No token found, user already logged out");
+      toastr.warning("Không tìm thấy token, có thể bạn đã đăng xuất!");
       return;
     }
 
@@ -82,18 +87,21 @@ async function logout() {
 
     if (response.ok) {
       localStorage.removeItem("token");
-      console.log("Logout successful");
+      toastr.success("Đăng xuất thành công!");
     } else {
       const data = await response.json();
-      console.error("Logout failed:", data.error);
+      console.error("Lỗi đăng xuất:", data.error);
+      toastr.error("Đăng xuất thất bại!");
       if (response.status === 401) {
         localStorage.removeItem("token");
         localStorage.removeItem("user_id");
+        toastr.info("Phiên đăng nhập đã hết hạn, token bị xóa!");
       }
     }
   } catch (error) {
-    console.error("Error during logout:", error);
+    console.error("Lỗi khi đăng xuất:", error);
     localStorage.removeItem("token");
+    toastr.error("Có lỗi xảy ra khi đăng xuất!");
   }
 }
 
@@ -109,7 +117,7 @@ setInterval(() => {
 
 window.addEventListener("storage", function (e) {
   if (e.key === "token") {
-    console.log("Token changed in another tab");
+    toastr.info("Token đã thay đổi trên một tab khác!");
     checkLoginStatus();
     checkAuthRoutes();
   }

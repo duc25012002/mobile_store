@@ -6,6 +6,7 @@ import { processOrderPayment } from "./VNpay.js";
 export const getOrderList = async () => {
   if (!token) {
     console.log("Token không tồn tại. Vui lòng đăng nhập.");
+    toastr.error("Token không tồn tại. Vui lòng đăng nhập.");
     return null;
   }
 
@@ -23,13 +24,16 @@ export const getOrderList = async () => {
       return response.data;
     } else {
       console.log("Không có đơn hàng.");
+      toastr.info("Không có đơn hàng.");
       return [];
     }
   } catch (error) {
     if (error.message.includes("401")) {
       console.log("Lỗi xác thực, vui lòng đăng nhập lại.");
+      toastr.error("Lỗi xác thực, vui lòng đăng nhập lại.");
     } else {
       console.error("Lỗi khi lấy dữ liệu:", error);
+      toastr.error("Lỗi khi lấy dữ liệu.", error.message);
     }
     return null;
   }
@@ -40,7 +44,7 @@ getOrderList();
 export const createOrder = async (orderData) => {
   if (!token) {
     console.log("Token không tồn tại. Vui lòng đăng nhập.");
-    alert("Vui lòng đăng nhập trước khi tạo đơn hàng.");
+    toastr.error("Vui lòng đăng nhập trước khi tạo đơn hàng.");
     return;
   }
 
@@ -56,19 +60,21 @@ export const createOrder = async (orderData) => {
 
     if (response.status === "success") {
       console.log("Đơn hàng đã được tạo thành công:", response.data);
-      alert("Đơn hàng đã được tạo thành công.");
+      toastr.success("Đơn hàng đã được tạo thành công.");
       return response.data;
     } else {
       console.error(
         "Lỗi từ API:",
         response.message || "Lỗi không xác định từ API."
       );
-      alert("Đã xảy ra lỗi khi tạo đơn hàng. Vui lòng thử lại!");
+      toastr.error(
+        response.message || "Đã xảy ra lỗi khi tạo đơn hàng. Vui lòng thử lại!"
+      );
       return null;
     }
   } catch (error) {
     console.error("Không thể tạo đơn hàng:", error.message);
-    alert("Đã xảy ra lỗi khi tạo đơn hàng. Vui lòng thử lại!");
+    toastr.error("Đã xảy ra lỗi khi tạo đơn hàng. Vui lòng thử lại!");
     return null;
   }
 };
@@ -101,10 +107,10 @@ document
         }));
         console.log("orderDetails:", orderDetails);
       } else {
-        console.log("Giỏ hàng rỗng.");
+        toastr.info("Giỏ hàng rỗng.");
       }
     } catch (error) {
-      console.error("Có lỗi xảy ra khi xử lý giỏ hàng:", error);
+      toastr.error("Có lỗi xảy ra khi xử lý giỏ hàng.", error.message);
     }
 
     const totalPrice = parseInt(
@@ -130,16 +136,17 @@ document
 
     if (createdOrder && paymentMethod === "1") {
       console.log("Đang tiến hành thanh toán cho đơn hàng...");
+      toastr.info("Đang tiến hành thanh toán cho đơn hàng...");
       await processOrderPayment("https://mobile-store.id.vn");
     } else if (createdOrder) {
       console.log(
         "Đơn hàng đã được tạo thành công với hình thức thanh toán bằng tiền mặt."
       );
-      alert(
+      toastr.success(
         "Đơn hàng đã được tạo thành công với hình thức thanh toán bằng tiền mặt."
       );
     } else {
       console.log("Không thể tiến hành thanh toán vì tạo đơn hàng thất bại.");
-      alert("Không thể tiến hành thanh toán vì tạo đơn hàng thất bại.");
+      toastr.error("Không thể tiến hành thanh toán vì tạo đơn hàng thất bại.");
     }
   });

@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="assets/css/style.css" />
     <!-- responsive css -->
     <link rel="stylesheet" href="assets/css/responsive.css" />
+    <link href="assets/css/toastr.css" rel="stylesheet" />
 
     <!-- Modernizer JS -->
     <script src="assets/js/vendor/modernizr-3.5.0.min.js"></script>
@@ -133,11 +134,17 @@
                     </div>
                   </div>
                   <input
+                    id="searchInput"
                     type="text"
                     class="top-cat-field"
                     placeholder="Search entire store here"
                   />
-                  <input type="button" class="top-search-btn" value="Search" />
+                  <input
+                    id="searchButton"
+                    type="button"
+                    class="top-search-btn"
+                    value="Search"
+                  />
                 </form>
               </div>
             </div>
@@ -1631,6 +1638,7 @@
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/ajax-mail.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/toastr.js"></script>
     <script src="./API/logout.js" type="module"></script>
     <script src="./API/VNpay.js" type="module"></script>
     <script src="./API/cart.js" type="module"></script>

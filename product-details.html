@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="assets/css/style.css" />
     <!-- responsive css -->
     <link rel="stylesheet" href="assets/css/responsive.css" />
+    <link href="assets/css/toastr.css" rel="stylesheet" />
 
     <!-- Modernizer JS -->
     <script src="assets/js/vendor/modernizr-3.5.0.min.js"></script>
@@ -133,11 +134,17 @@
                     </div>
                   </div>
                   <input
+                    id="searchInput"
                     type="text"
                     class="top-cat-field"
                     placeholder="Search entire store here"
                   />
-                  <input type="button" class="top-search-btn" value="Search" />
+                  <input
+                    id="searchButton"
+                    type="button"
+                    class="top-search-btn"
+                    value="Search"
+                  />
                 </form>
               </div>
             </div>
@@ -191,10 +198,10 @@
                         <div class="subtotal-text">Eco Tax (-2.00):</div>
                         <div class="subtotal-price">£1.51</div>
                       </li> -->
-                      <li>
+                      <!-- <li>
                         <div class="subtotal-text">discount:</div>
                         <div class="subtotal-price">10%</div>
-                      </li>
+                      </li> -->
                       <li>
                         <div class="subtotal-text">Total:</div>
                         <div class="subtotal-price"><span>£60.24</span></div>
@@ -1053,7 +1060,7 @@
                   role="tabpanel"
                   aria-labelledby="nav_desctiption"
                 >
-                  <p>
+                  <p id="desctiption_product">
                     Studio Design' PolyFaune collection features classic
                     products with colorful patterns, inspired by the traditional
                     japanese origamis. To wear with a chino or jeans. The
@@ -1887,6 +1894,7 @@
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/ajax-mail.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/toastr.js"></script>
     <script src="./API/api.js" type="module"></script>
     <script src="./API/product-details.js" type="module"></script>
     <script src="./API/logout.js" type="module"></script>

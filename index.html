@@ -25,6 +25,10 @@
     <link rel="stylesheet" href="assets/css/style.css" />
     <!-- responsive css -->
     <link rel="stylesheet" href="assets/css/responsive.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+      rel="stylesheet"
+    />
 
     <!-- Modernizer JS -->
     <script src="assets/js/vendor/modernizr-3.5.0.min.js"></script>
@@ -107,7 +111,7 @@
             <div class="col-lg-6 col-md-12 col-12 order-sm-last">
               <div class="header-middle-inner">
                 <form action="method">
-                  <div class="top-cat hm1">
+                  <!-- <div class="top-cat hm1">
                     <div class="search-form">
                       <select>
                         <optgroup label="Electronics">
@@ -128,13 +132,19 @@
                         </optgroup>
                       </select>
                     </div>
-                  </div>
+                  </div> -->
                   <input
+                    id="searchInput"
                     type="text"
                     class="top-cat-field"
                     placeholder="Search entire store here"
                   />
-                  <input type="button" class="top-search-btn" value="Search" />
+                  <input
+                    id="searchButton"
+                    type="button"
+                    class="top-search-btn"
+                    value="Search"
+                  />
                 </form>
               </div>
             </div>
@@ -188,10 +198,10 @@
                         <div class="subtotal-text">Eco Tax (-2.00):</div>
                         <div class="subtotal-price">£1.51</div>
                       </li> -->
-                      <li>
+                      <!-- <li>
                         <div class="subtotal-text">discount:</div>
-                        <div class="subtotal-price">10%</div>
-                      </li>
+                        <div id="discount" class="subtotal-price">10%</div>
+                      </li> -->
                       <li>
                         <div class="subtotal-text">Total:</div>
                         <div class="subtotal-price"><span>£60.24</span></div>
@@ -910,7 +920,7 @@
                   aria-controls="one"
                   aria-selected="true"
                 >
-                  Camera, Photo & Video
+                  APPLE
                 </button>
               </li>
               <li role="presentation">
@@ -924,7 +934,7 @@
                   aria-controls="two"
                   aria-selected="false"
                 >
-                  Audio & Home Theater
+                  SAMSUNG
                 </button>
               </li>
               <li role="presentation">
@@ -938,7 +948,7 @@
                   aria-controls="three"
                   aria-selected="false"
                 >
-                  Cellphones & Accessories
+                  XIAOMI
                 </button>
               </li>
             </ul>
@@ -953,7 +963,7 @@
           >
             <div class="product-gallary-wrapper">
               <div
-                id="product-list"
+                id="one_product_list"
                 class="product-gallary-active owl-carousel owl-arrow-style product-spacing"
               ></div>
             </div>
@@ -966,6 +976,7 @@
           >
             <div class="product-gallary-wrapper">
               <div
+                id="two_product_list"
                 class="product-gallary-active owl-carousel owl-arrow-style product-spacing"
               >
                 <div class="product-item">
@@ -1411,6 +1422,7 @@
           >
             <div class="product-gallary-wrapper">
               <div
+                id="three_product_list"
                 class="product-gallary-active owl-carousel owl-arrow-style product-spacing"
               >
                 <div class="product-item">
@@ -6887,6 +6899,7 @@
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/ajax-mail.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="./API/api.js" type="module"></script>
     <script src="./API/login.js" type="module"></script>
     <script src="./API/logout.js" type="module"></script>

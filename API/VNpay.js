@@ -23,6 +23,7 @@ export const vnpayPayment = async (orderId, amount, urlReturn) => {
     return response.data;
   } catch (error) {
     console.error("VNPay Payment failed:", error);
+    toastr.error("Thanh toán VNPay thất bại.", "Lỗi:", error);
     throw error;
   }
 };
@@ -40,15 +41,23 @@ export const processOrderPayment = async (urlReturn) => {
         console.log(
           `Đang chuyển hướng đến trang thanh toán cho đơn hàng ${code}...`
         );
-        window.location.href = paymentResponse;
+        toastr.info(
+          `Đang chuyển hướng đến trang thanh toán cho đơn hàng ${code}...`
+        );
+        setTimeout(() => {
+          window.location.href = paymentResponse;
+        }, 1500);
       } else {
         console.log("Không nhận được URL thanh toán từ VNPay.");
+        toastr.error("Không nhận được URL thanh toán từ VNPay.", "Lỗi");
       }
     } catch (error) {
-      console.error(`Lỗi khi khởi tạo thanh toán cho đơn hàng ${code}:`, error);
+      toastr.error(
+        `Lỗi khi khởi tạo thanh toán cho đơn hàng ${code}: ${error.message}`,
+        "Lỗi"
+      );
     }
   } else {
-    console.log("Không có đơn hàng để thanh toán.");
+    toastr.info("Không có đơn hàng để thanh toán.");
   }
 };
-
