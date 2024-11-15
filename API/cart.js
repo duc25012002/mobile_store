@@ -43,7 +43,6 @@ export async function updateUserCart(userId, productVariantId, quantity) {
       { Authorization: `Bearer ${token}` }
     );
 
-    console.log("Giỏ hàng sau khi cập nhật:", updatedCart);
     if (updatedCart.message) {
       alert("Thông báo: " + updatedCart.message);
     }

@@ -19,10 +19,6 @@ const getUserId = async () => {
         Authorization: `Bearer ${token}`,
       }
     );
-
-    console.log("Response từ API:", response);
-    console.log("Dữ liệu trong response:", response.data);
-    console.log("User ID:", response.data.id);
     return response.data.id;
   } catch (error) {
     console.error("Error fetching user_id:", error);
@@ -93,6 +89,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-
-
-

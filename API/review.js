@@ -116,7 +116,6 @@ document
     )?.value;
 
     if (!comment || !rating) {
-      console.error("Vui lòng điền đầy đủ thông tin!");
       alert("Vui lòng điền đầy đủ thông tin!");
       return;
     }
