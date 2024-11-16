@@ -52,6 +52,7 @@ const updateReviews = async (productId) => {
     const reviews = await getProductReviewsById(productId);
     const reviewsContainer = document.querySelector("#reviews-table-body");
     const reviewTab = document.getElementById("nav_review");
+    const reviewCardProduct = document.querySelector("#review-Card-Product");
 
     if (reviewTab) {
       reviewTab.textContent = `Reviews (${reviews.length})`;

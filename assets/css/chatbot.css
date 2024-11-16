@@ -1,0 +1,221 @@
+/* :root {
+  --white: #ffffff;
+  --light: whitesmoke;
+  --light-grey: #e8e8e8;
+  --pink: #ff176b;
+  --medium-dark: #777;
+  --dark: #242526;
+  --border-rad-lg: 15px;
+} */
+
+:root {
+  --border-rad-lg: 15px;
+  --medium-light-text: #586e88;
+  --light-text: #000000;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.chatbot-container {
+  position: fixed;
+  right: 8%;
+  bottom: 0;
+  z-index: 1000;
+  background-color: #e1ebec;
+  width: 400px;
+  min-height: 380px;
+  border-radius: var(--border-rad-lg);
+  display: none;
+  flex-direction: column;
+  padding: 1em;
+}
+
+.chatbot-container h1 {
+  font-size: 15px;
+  color: #000000;
+  grid-area: title;
+}
+
+.chatbot-container h2,
+.chatbot-container p {
+  color: var(--medium-light-text);
+}
+
+.chatbot-container h2 {
+  font-size: 11px;
+  font-weight: 700;
+  grid-area: subtitle;
+  text-transform: uppercase;
+}
+
+.chatbot-container > * {
+  padding: 0.5em;
+}
+
+.chatbot-header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.chatbot-header > * {
+  margin: 0.11em;
+}
+
+.chatbot-container .logo {
+  grid-area: logo;
+  width: 100px;
+  display: flex;
+}
+
+.chatbot-container .supportId {
+  font-size: 10px;
+  grid-area: supportId;
+  text-align: center;
+}
+
+.chatbot-container .clear-btn {
+  grid-area: clear-btn;
+  height: 20px;
+  padding: 0;
+  width: 80%;
+  color: var(--medium-light-text);
+  font-size: 12px;
+  margin: 0 auto;
+}
+
+.chatbot-container .clear-btn:hover {
+  border: 1px solid #24976f;
+  color: #24976f;
+  cursor: pointer;
+}
+
+.chatbot-container .chatbot-conversation-container {
+  max-height: 250px;
+  min-height: 250px;
+  overflow-y: scroll;
+  margin: 1em 0;
+}
+
+/* stop ugly scroll bar on some browsers */
+.chatbot-container .chatbot-conversation-container::-webkit-scrollbar {
+  display: none;
+}
+
+.chatbot-container .chatbot-conversation-container::-moz-scrollbar {
+  display: none;
+}
+
+.chatbot-container .speech {
+  padding: 1em;
+  margin: 1em auto;
+  max-width: 260px;
+  color: var(--light-text);
+  min-width: 100%;
+  border-radius: var(--border-rad-lg);
+}
+
+.chatbot-container .speech:first-child {
+  margin-top: 0;
+}
+
+.chatbot-container .speech-ai {
+  background: #fedc19;
+  border-top-left-radius: 0;
+}
+
+.chatbot-container .speech-human {
+  background: #24976f;
+  border-top-right-radius: 0;
+}
+
+.chatbot-container .chatbot-input-container {
+  display: flex;
+}
+
+.chatbot-container input[type="text"],
+.chatbot-container button {
+  background-color: #ffffff;
+  border: 1px solid var(--medium-light-text);
+  border-radius: 15px;
+  padding: 1em;
+}
+
+.chatbot-container input[type="text"] {
+  color: #000000;
+  width: 100%;
+  border-right: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.chatbot-container .submit-btn {
+  border-left: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  background-color: #fedc19;
+}
+
+.chatbot-container .send-btn-icon {
+  width: 20px;
+  display: block;
+}
+
+@media (min-width: 380px) {
+  .chatbot-container .setup-input-container {
+    padding-top: 0;
+  }
+
+  .chatbot-container .speech-bubble-ai:before {
+    top: 92px;
+  }
+
+  .chatbot-container .speech-bubble-ai:after {
+    top: 96px;
+  }
+
+  .chatbot-container .speech-bubble-ai > p {
+    font-size: 100%;
+  }
+
+  .chatbot-container textarea::placeholder {
+    font-size: 100%;
+    opacity: 0.8;
+  }
+}
+
+@keyframes cursor-blink {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.chatbot-container .blinking-cursor::after {
+  content: "|";
+  font-weight: 700;
+  display: inline-block;
+  animation: cursor-blink 0.5s steps(2) infinite;
+}
+
+#support_user {
+  background-color: #fedc19;
+  right: 20px;
+  border-radius: 50%;
+  -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
+  position: fixed;
+  text-align: center;
+  z-index: 9;
+  line-height: 50px;
+  border: 2px solid #ddd;
+}

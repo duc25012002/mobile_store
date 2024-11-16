@@ -30,6 +30,8 @@
       rel="stylesheet"
     />
 
+    <link rel="stylesheet" href="./assets/css/chatbot.css" />
+
     <!-- Modernizer JS -->
     <script src="assets/js/vendor/modernizr-3.5.0.min.js"></script>
   </head>
@@ -6618,6 +6620,49 @@
         </div>
       </div>
       <!-- news-letter area end -->
+      <div id="support_user">
+        <img
+          style="opacity: 0.7; height: auto; width: 80%"
+          src="assets/img/icon/support-user.svg"
+          alt="Hỗ trợ"
+        />
+      </div>
+
+      <section class="chatbot-container">
+        <div class="chatbot-header">
+          <div
+            style="display: flex; justify-content: center; align-items: center"
+          >
+            <img src="assets/img/logo/logo-sinrato.png" class="logo" />
+          </div>
+          <h1>Nhân viên hỗ trợ</h1>
+          <div
+            id="btn-exit"
+            style="
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              cursor: pointer;
+            "
+          >
+            <img
+              style="height: 25px; width: auto"
+              src="assets/img/icon/exit.svg"
+              alt="exit"
+            />
+          </div>
+        </div>
+        <div class="chatbot-conversation-container" id="chatbot-conversation">
+          <div class="speech speech-ai">Tôi có thể giúp gì cho bạn?</div>
+        </div>
+        <form id="form" class="chatbot-input-container">
+          <input name="user-input" type="text" id="user-input" required />
+          <button id="submit-btn" class="submit-btn">
+            <img src="./chatbot/img/send.svg" class="send-btn-icon" />
+          </button>
+        </form>
+      </section>
+
       <!-- footer top area start -->
       <div class="footer-top pt-50 pb-50">
         <div class="container-fluid">
@@ -6898,11 +6943,13 @@
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/ajax-mail.js"></script>
+    <script src="./chatbot/index.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="./API/api.js" type="module"></script>
     <script src="./API/login.js" type="module"></script>
     <script src="./API/logout.js" type="module"></script>
     <script src="./API/products-all.js" type="module"></script>
+    <script src="./assets/js/exit.js" type="module"></script>
   </body>
 </html>

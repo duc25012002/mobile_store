@@ -56,7 +56,9 @@ function checkAuthRoutes() {
 
   if (token && currentPage.includes("/login.html")) {
     toastr.info("Bạn đã đăng nhập rồi!");
-    window.location.href = "index.html";
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 1500);
     return;
   }
 
