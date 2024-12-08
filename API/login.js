@@ -44,7 +44,6 @@ const handleUserId = async () => {
 
 handleUserId();
 
-
 document.addEventListener("DOMContentLoaded", () => {
   const loginButton = document.querySelector(".btn.btn-secondary");
 
