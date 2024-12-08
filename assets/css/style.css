@@ -1650,11 +1650,25 @@ nav.m-style3 {
 }
 
 .ratings span i {
-  font-weight: 900;
+  font-weight: 400;
 }
 
 span.yellow {
   color: #fedc19;
+}
+
+span.yellow-half-primary {
+  background: linear-gradient(to right, #fedc19 50%, #444 50%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+span.yellow-half-secondary {
+  background: linear-gradient(to right, #fedc19 50%, #fff 50%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
 }
 
 .regular-price {
@@ -2059,7 +2073,7 @@ a.shop-btn:hover {
 }
 
 .sale-nav .owl-nav {
-  top: -190px;
+  top: -52px;
 }
 
 /* ---brand home--- 2 */
@@ -3008,11 +3022,12 @@ a.shop-btn:hover {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
+  justify-content: space-between;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
-  -ms-flex-direction: row;
-  -webkit-flex-direction: row;
-  flex-direction: row;
+  -ms-flex-direction: column;
+  -webkit-flex-direction: column;
+  flex-direction: column;
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 10px;
@@ -3023,6 +3038,11 @@ a.shop-btn:hover {
   font-size: 14px;
   font-weight: 400;
   width: 55px;
+}
+
+input#min-price,
+input#max-price {
+  width: 100% !important;
 }
 
 /* ---price filter css end--- */
@@ -3093,6 +3113,7 @@ a.shop-btn:hover {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  justify-content: space-between;
 }
 
 .shop-product-wrap.row.column_3 .sinrato-list-item {
@@ -3251,7 +3272,7 @@ a.shop-btn:hover {
   display: -ms-flexbox;
   display: flex;
   width: 230px;
-  flex: 1 0 auto;
+  flex: 0 1 auto;
   position: relative;
 }
 
@@ -3262,6 +3283,9 @@ a.shop-btn:hover {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .sinrato-thumb .sec-img {
@@ -3332,6 +3356,7 @@ a.shop-btn:hover {
   justify-content: center;
   position: relative;
   width: 250px;
+  max-width: 250px;
   flex: 1 0 auto;
 }
 
@@ -3446,9 +3471,9 @@ a.shop-btn:hover {
   display: none;
 }
 
-.pro-details-review span i {
+/* .pro-details-review span i {
   color: #ddd;
-}
+} */
 
 .product-detail-sort-des {
   border-bottom: 1px solid #f0f0f0;

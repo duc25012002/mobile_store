@@ -8,9 +8,7 @@
     <meta name="keywords" content="" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <!-- Page Title -->
-    <title>
-      Sinrato - Mega Shop Electronics eCommerce Bootstrap 4 Template
-    </title>
+    <title>Sinrato</title>
     <!--Fevicon-->
     <link rel="icon" href="assets/img/icon/favicon.ico" type="image/x-icon" />
     <!-- Bootstrap css -->
@@ -27,6 +25,7 @@
     <!-- responsive css -->
     <link rel="stylesheet" href="assets/css/responsive.css" />
     <link href="assets/css/toastr.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./assets/css/chatbot.css" />
 
     <!-- Modernizer JS -->
     <script src="assets/js/vendor/modernizr-3.5.0.min.js"></script>
@@ -152,7 +151,7 @@
             <div class="col-lg-4 col-md-8 col-12 col-sm-8 order-lg-last">
               <div class="mini-cart-option">
                 <ul>
-                  <li class="compare">
+                  <!-- <li class="compare">
                     <a class="ha-toggle" href="compare.html"
                       ><span class="lnr lnr-sync"></span>Product compare</a
                     >
@@ -162,7 +161,7 @@
                       ><span class="lnr lnr-heart"></span
                       ><span class="count">1</span>wishlist</a
                     >
-                  </li>
+                  </li> -->
                   <li class="my-cart">
                     <button type="button" class="ha-toggle">
                       <span class="lnr lnr-cart"></span
@@ -173,10 +172,27 @@
                         id="mini_cart_info"
                         class="mb-30"
                         style="flex-direction: column"
-                      ></li>
+                      >
+                        <div class="cart-img">
+                          <a href="product-details.html"
+                            ><img alt="" src="assets/img/cart/cart-1.jpg"
+                          /></a>
+                        </div>
+                        <div class="cart-info">
+                          <h4>
+                            <a href="product-details.html"
+                              >Koss Porta Pro On Ear Headphones
+                            </a>
+                          </h4>
+                          <span> <span>1 x </span>£165.00</span>
+                        </div>
+                        <div class="del-icon">
+                          <i class="fa fa-times-circle"></i>
+                        </div>
+                      </li>
                       <li>
                         <div class="subtotal-text">Sub-total:</div>
-                        <div class="subtotal-price">0&nbsp;₫</div>
+                        <div class="subtotal-price">£48.94</div>
                       </li>
                       <!-- <li>
                         <div class="subtotal-text">Eco Tax (-2.00):</div>
@@ -188,7 +204,7 @@
                       </li> -->
                       <li>
                         <div class="subtotal-text">Total:</div>
-                        <div class="subtotal-price"><span>0&nbsp;₫</span></div>
+                        <div class="subtotal-price"><span>£60.24</span></div>
                       </li>
                       <li class="mt-30">
                         <a class="cart-button" href="cart.html">view cart</a>
@@ -830,11 +846,13 @@
                           <div class="col-12 col-sm-12 col-md-8">
                             <input
                               name="email"
-                              type="text"
+                              type="email"
                               class="form-control"
                               id="email"
                               placeholder="Email"
                               required
+                              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                              aria-label="Enter your email address"
                             />
                           </div>
                         </div>
@@ -844,7 +862,9 @@
                             class="col-12 col-sm-12 col-md-4 col-form-label"
                             >Password</label
                           >
-                          <div class="col-12 col-sm-12 col-md-8">
+                          <div
+                            class="col-12 col-sm-12 col-md-8 position-relative"
+                          >
                             <input
                               name="password"
                               type="password"
@@ -852,14 +872,29 @@
                               id="c-password"
                               placeholder="Password"
                               required
+                              aria-label="Enter your password"
                             />
-                            <button class="pass-show-btn" type="button">
+                            <button
+                              class="pass-show-btn"
+                              type="button"
+                              style="
+                                top: 50%;
+                                right: 10px;
+                                transform: translateY(-50%);
+                                text-decoration: none;
+                              "
+                              aria-label="Show or hide password"
+                            >
                               Show
                             </button>
                           </div>
                         </div>
                         <div class="login-box mt-5 text-center">
-                          <p><a href="#">Forgot your password?</a></p>
+                          <p>
+                            <a href="#" class="text-primary"
+                              >Forgot your password?</a
+                            >
+                          </p>
                           <button
                             type="submit"
                             class="btn btn-secondary mb-4 mt-4"
@@ -870,7 +905,9 @@
                         <div class="text-center pt-20 top-bordered">
                           <p>
                             No account?
-                            <a href="register.html">Create one here</a>.
+                            <a href="register.html" class="text-primary"
+                              >Create one here</a
+                            >.
                           </p>
                         </div>
                       </form>
@@ -889,12 +926,55 @@
     </div>
     <!-- End of Login Wrapper -->
 
+    <!-- Chatbot start -->
+    <div id="support_user">
+      <img
+        style="opacity: 0.7; height: auto; width: 80%"
+        src="assets/img/icon/support-user.svg"
+        alt="Hỗ trợ"
+      />
+    </div>
+    <section class="chatbot-container">
+      <div class="chatbot-header">
+        <div
+          style="display: flex; justify-content: center; align-items: center"
+        >
+          <img src="assets/img/logo/logo-sinrato.png" class="logo" />
+        </div>
+        <h1>Nhân viên hỗ trợ</h1>
+        <div
+          id="btn-exit"
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+          "
+        >
+          <img
+            style="height: 25px; width: auto"
+            src="assets/img/icon/exit.svg"
+            alt="exit"
+          />
+        </div>
+      </div>
+      <div class="chatbot-conversation-container" id="chatbot-conversation">
+        <div class="speech speech-ai">Tôi có thể giúp gì cho bạn?</div>
+      </div>
+      <form id="form" class="chatbot-input-container">
+        <input name="user-input" type="text" id="user-input" required />
+        <button id="submit-btn" class="submit-btn">
+          <img src="./chatbot/img/send.svg" class="send-btn-icon" />
+        </button>
+      </form>
+    </section>
+    <!-- Chatbot end -->
+
     <!-- scroll to top -->
     <div class="scroll-top not-visible">
       <i class="fa fa-angle-up"></i>
     </div>
     <!-- /End Scroll to Top -->
-
     <!-- footer area start -->
     <footer>
       <!-- news-letter area start -->
@@ -1238,6 +1318,8 @@
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/ajax-mail.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="./chatbot/index.js" type="module"></script>
+    <script src="assets/js/script.js"></script>
     <script src="assets/js/toastr.js"></script>
     <script src="./API/api.js" type="module"></script>
     <script src="./API/login.js" type="module"></script>

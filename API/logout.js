@@ -5,24 +5,6 @@ const dropdownElement = document.querySelector(
   "#__session .box-dropdown.ha-dropdown"
 );
 
-if (token) {
-  dropdownElement.innerHTML = `
-      <li><a href="/profile.html">Profile</a></li>
-      <li><a href="#" id="logout">Logout</a></li>
-      `;
-  document
-    .getElementById("logout")
-    .addEventListener("click", async function (event) {
-      event.preventDefault();
-      await logout();
-    });
-} else {
-  dropdownElement.innerHTML = `
-      <li><a href="register.html">Register</a></li>
-      <li><a href="login.html">Login</a></li>
-      `;
-}
-
 function checkLoginStatus() {
   const token = localStorage.getItem("token");
   const dropdownElement = document.querySelector(
@@ -31,17 +13,22 @@ function checkLoginStatus() {
 
   if (token) {
     dropdownElement.innerHTML = `
-        <li><a href="/profile.html">Profile</a></li>
+        <li><a href="my-account.html">Profile</a></li>
         <li><a href="#" id="logout">Logout</a></li>
     `;
-    document
-      .getElementById("logout")
-      .addEventListener("click", async function (event) {
-        event.preventDefault();
-        await logout();
-        toastr.success("Bạn đã đăng xuất thành công!");
-        window.location.href = "index.html";
-      });
+
+    const handleLogout = async (event) => {
+      event.preventDefault();
+      await logout();
+    };
+
+    const elementLogout = document.getElementById("logout");
+    elementLogout.addEventListener("click", handleLogout);
+    const elementLogout_my_account =
+      document.getElementById("logout-my-account");
+    if (elementLogout_my_account) {
+      elementLogout_my_account.addEventListener("click", handleLogout);
+    }
   } else {
     dropdownElement.innerHTML = `
         <li><a href="register.html">Register</a></li>
@@ -62,7 +49,7 @@ function checkAuthRoutes() {
     return;
   }
 
-  const protectedPages = ["/profile.html"];
+  const protectedPages = ["my-account.html"];
   if (!token && protectedPages.some((page) => currentPage.includes(page))) {
     toastr.warning("Vui lòng đăng nhập để tiếp tục!");
     setTimeout(() => {
@@ -90,6 +77,9 @@ async function logout() {
     if (response.ok) {
       localStorage.removeItem("token");
       toastr.success("Đăng xuất thành công!");
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1500);
     } else {
       const data = await response.json();
       console.error("Lỗi đăng xuất:", data.error);
@@ -103,11 +93,13 @@ async function logout() {
   } catch (error) {
     console.error("Lỗi khi đăng xuất:", error);
     localStorage.removeItem("token");
-    toastr.error("Có lỗi xảy ra khi đăng xuất!");
+    // toastr.error("Có lỗi xảy ra khi đăng xuất!");
   }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  // console.log("kiểm tra token", token);
+
   checkLoginStatus();
   checkAuthRoutes();
 });

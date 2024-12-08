@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const password = document.querySelector('input[name="password"]').value;
 
       if (!email) {
-        toastr.warning("Vui lòng nhập tên người dùng.");
+        toastr.warning("Vui lòng nhập email người dùng.");
         return;
       }
       if (!password) {
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
           "Có lỗi xảy ra trong quá trình đăng nhập. Vui lòng thử lại."
         );
       } finally {
-        this.innerHTML = "Đăng nhập";
+        this.innerHTML = "Sign In";
         this.disabled = false;
       }
     });

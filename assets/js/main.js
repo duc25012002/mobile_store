@@ -1,3 +1,4 @@
+let values = [];
 (function ($) {
   "use strict";
 
@@ -765,18 +766,48 @@
   });
 
   // pricing filter
+  const formatPrice = (price) =>
+    new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+
   $("#price-slider").slider({
     range: true,
     min: 0,
-    max: 500,
-    values: [0, 500],
+    max: 100000000,
+    values: [0, 100000000],
     slide: function (event, ui) {
-      $("#min-price").val("$" + ui.values[0]);
-      $("#max-price").val("$" + ui.values[1]);
+      $("#min-price").val(formatPrice(ui.values[0]));
+      $("#max-price").val(formatPrice(ui.values[1]));
+    },
+    stop: function (event, ui) {
+      const customEvent = new CustomEvent("sliderValuesUpdated", {
+        detail: ui.values,
+      });
+      window.dispatchEvent(customEvent);
     },
   });
-  $("#min-price").val("$" + $("#price-slider").slider("values", 0));
-  $("#max-price").val("$" + $("#price-slider").slider("values", 1));
+
+  // Hiển thị giá trị ban đầu cho slider và input
+  function initializeSliderValues() {
+    const minPrice = localStorage.getItem("minPrice");
+    const maxPrice = localStorage.getItem("maxPrice");
+
+    if (minPrice !== null && maxPrice !== null) {
+      $("#price-slider").slider("values", [
+        parseInt(minPrice),
+        parseInt(maxPrice),
+      ]);
+      $("#min-price").val(formatPrice(minPrice));
+      $("#max-price").val(formatPrice(maxPrice));
+    } else {
+      $("#min-price").val(formatPrice($("#price-slider").slider("values", 0)));
+      $("#max-price").val(formatPrice($("#price-slider").slider("values", 1)));
+    }
+  }
+
+  initializeSliderValues();
 
   // magnificPopup img view
   $(".img-popup").magnificPopup({

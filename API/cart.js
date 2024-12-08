@@ -61,7 +61,7 @@ export async function updateUserCart(userId, productVariantId, quantity) {
   }
 }
 
-export async function addToCart_homepage(userId, productVariantId, quantity) {
+export async function addToCart(userId, productVariantId, quantity) {
   try {
     const body = {
       user_Id: userId,
@@ -143,6 +143,7 @@ function renderCartTable(cartItems) {
           console.log("Selected Product ID:", selectedProductId);
           if (selectedProductId) {
             localStorage.setItem("selectedProductId", selectedProductId);
+            loadAndRenderCart();
           } else {
             console.error("Không có ID sản phẩm được chọn.");
           }
@@ -274,19 +275,24 @@ function attachEventListeners(row, item) {
   });
 
   const refreshButton = row.querySelector(".btn.btn-primary");
-  refreshButton.addEventListener("click", async () => {
+
+  refreshButton.addEventListener("click", async (event) => {
+    event.preventDefault();
+
     const newQuantity = parseInt(quantityInput.value, 10);
 
     if (isNaN(newQuantity) || newQuantity <= 0) {
       alert("Số lượng phải là một số hợp lệ và lớn hơn 0.");
       return;
     }
+
     await updateUserCart(user_id, item.product_variant_id, newQuantity);
+
     loadAndRenderCart();
   });
 }
 
-async function loadAndRenderCart() {
+export async function loadAndRenderCart() {
   try {
     const cartItems = await getUserCart();
     renderCartTable(cartItems);

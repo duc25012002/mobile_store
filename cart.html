@@ -7,9 +7,7 @@
     <meta name="description" content="" />
     <meta name="keywords" content="" />
     <!-- Page Title -->
-    <title>
-      Sinrato - Mega Shop Electronics eCommerce Bootstrap 4 Template
-    </title>
+    <title>Sinrato</title>
     <!--Fevicon-->
     <link rel="icon" href="assets/img/icon/favicon.ico" type="image/x-icon" />
     <!-- Bootstrap css -->
@@ -25,7 +23,9 @@
     <link rel="stylesheet" href="assets/css/style.css" />
     <!-- responsive css -->
     <link rel="stylesheet" href="assets/css/responsive.css" />
+
     <link href="assets/css/toastr.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./assets/css/chatbot.css" />
 
     <!-- Modernizer JS -->
     <script src="assets/js/vendor/modernizr-3.5.0.min.js"></script>
@@ -111,7 +111,7 @@
             <div class="col-lg-5 col-md-12 col-12 order-sm-last">
               <div class="header-middle-inner">
                 <form action="method">
-                  <div class="top-cat hm1">
+                  <!-- <div class="top-cat hm1">
                     <div class="search-form">
                       <select>
                         <optgroup label="Electronics">
@@ -132,7 +132,7 @@
                         </optgroup>
                       </select>
                     </div>
-                  </div>
+                  </div> -->
                   <input
                     id="searchInput"
                     type="text"
@@ -151,7 +151,7 @@
             <div class="col-lg-4 col-md-8 col-12 col-sm-8 order-lg-last">
               <div class="mini-cart-option">
                 <ul>
-                  <li class="compare">
+                  <!-- <li class="compare">
                     <a class="ha-toggle" href="compare.html"
                       ><span class="lnr lnr-sync"></span>Product compare</a
                     >
@@ -161,7 +161,7 @@
                       ><span class="lnr lnr-heart"></span
                       ><span class="count">1</span>wishlist</a
                     >
-                  </li>
+                  </li> -->
                   <li class="my-cart">
                     <button type="button" class="ha-toggle">
                       <span class="lnr lnr-cart"></span
@@ -200,7 +200,7 @@
                       </li> -->
                       <!-- <li>
                         <div class="subtotal-text">discount:</div>
-                        <div class="subtotal-price">10%</div>
+                        <div id="discount" class="subtotal-price">10%</div>
                       </li> -->
                       <li>
                         <div class="subtotal-text">Total:</div>
@@ -1321,6 +1321,51 @@
         </div>
       </div>
       <!-- news-letter area end -->
+
+      <!-- Chatbot start -->
+      <div id="support_user">
+        <img
+          style="opacity: 0.7; height: auto; width: 80%"
+          src="assets/img/icon/support-user.svg"
+          alt="Hỗ trợ"
+        />
+      </div>
+      <section class="chatbot-container">
+        <div class="chatbot-header">
+          <div
+            style="display: flex; justify-content: center; align-items: center"
+          >
+            <img src="assets/img/logo/logo-sinrato.png" class="logo" />
+          </div>
+          <h1>Nhân viên hỗ trợ</h1>
+          <div
+            id="btn-exit"
+            style="
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              cursor: pointer;
+            "
+          >
+            <img
+              style="height: 25px; width: auto"
+              src="assets/img/icon/exit.svg"
+              alt="exit"
+            />
+          </div>
+        </div>
+        <div class="chatbot-conversation-container" id="chatbot-conversation">
+          <div class="speech speech-ai">Tôi có thể giúp gì cho bạn?</div>
+        </div>
+        <form id="form" class="chatbot-input-container">
+          <input name="user-input" type="text" id="user-input" required />
+          <button id="submit-btn" class="submit-btn">
+            <img src="./chatbot/img/send.svg" class="send-btn-icon" />
+          </button>
+        </form>
+      </section>
+      <!-- Chatbot end -->
+
       <!-- footer top area start -->
       <div class="footer-top pt-50 pb-50">
         <div class="container-fluid">
@@ -1449,7 +1494,14 @@
     <script src="assets/js/ajax-mail.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/toastr.js"></script>
+    <script src="./API/search.js" type="module"></script>
     <script src="./API/cart.js" type="module"></script>
     <script src="./API/logout.js" type="module"></script>
+    <script src="./chatbot/index.js" type="module"></script>
+    <script src="assets/js/script.js"></script>
+    <script src="./API/api.js" type="module"></script>
+    <script src="./API/login.js" type="module"></script>
+    <script src="./API/products-all.js" type="module"></script>
+    <script src="./API/brand.js" type="module"></script>
   </body>
 </html>

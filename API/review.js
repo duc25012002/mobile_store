@@ -10,6 +10,8 @@ const getProductReviewsById = async (productId) => {
   try {
     const response = await apiService.get(`/api/review/${productId}`);
     if (response.status === "success") {
+      console.log("danh sách đánh giá:", response);
+
       return response.data || [];
     } else {
       throw new Error(response.message || "Không thể lấy danh sách đánh giá.");
@@ -51,11 +53,12 @@ const updateReviews = async (productId) => {
   try {
     const reviews = await getProductReviewsById(productId);
     const reviewsContainer = document.querySelector("#reviews-table-body");
-    const reviewTab = document.getElementById("nav_review");
-    const reviewCardProduct = document.querySelector("#review-Card-Product");
+    const reviewTabs = document.querySelectorAll(".number_review");
 
-    if (reviewTab) {
-      reviewTab.textContent = `Reviews (${reviews.length})`;
+    if (reviewTabs.length > 0) {
+      reviewTabs.forEach((tab) => {
+        tab.textContent = `Reviews (${reviews.length})`;
+      });
     }
 
     reviewsContainer.innerHTML = reviews
@@ -95,14 +98,32 @@ const formatDate = (dateString) => {
 const renderStars = (rating) => {
   return Array.from({ length: 5 })
     .map(
-      (_, i) => `<li><i class="fa fa-star${i < rating ? "" : "-o"}"></i></li>`
+      (_, i) =>
+        `<li><span class="yellow"><i class="fa fa-star${
+          i < rating ? "" : "-o"
+        }"></i></span></li>`
     )
     .join("");
 };
 
-document
-  .querySelector(".review-form")
-  .addEventListener("submit", async function (event) {
+export async function calculateAverageRating(productId) {
+  try {
+    const reviews = await getProductReviewsById(productId);
+
+    const ratings = reviews.map((review) => review.rating);
+
+    if (ratings.length === 0) return 0;
+    const total = ratings.reduce((sum, rating) => sum + rating, 0);
+    return total / ratings.length;
+  } catch (error) {
+    console.error("Error calculating average rating:", error);
+    return 0;
+  }
+}
+
+const elementReview_form = document.querySelector(".review-form");
+if (elementReview_form) {
+  elementReview_form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     if (!token) {
@@ -133,6 +154,8 @@ document
       console.error("Lỗi khi gửi đánh giá:", error.message);
     }
   });
+}
 
-// Gọi cập nhật khi trang tải
-updateReviews(selectedProductId);
+document.addEventListener("DOMContentLoaded", () => {
+  updateReviews(selectedProductId);
+});

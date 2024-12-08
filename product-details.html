@@ -7,9 +7,7 @@
     <meta name="description" content="" />
     <meta name="keywords" content="" />
     <!-- Page Title -->
-    <title>
-      Sinrato - Mega Shop Electronics eCommerce Bootstrap 4 Template
-    </title>
+    <title>Sinrato</title>
     <!--Fevicon-->
     <link rel="icon" href="assets/img/icon/favicon.ico" type="image/x-icon" />
     <!-- Bootstrap css -->
@@ -26,6 +24,7 @@
     <!-- responsive css -->
     <link rel="stylesheet" href="assets/css/responsive.css" />
     <link href="assets/css/toastr.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./assets/css/chatbot.css" />
 
     <!-- Modernizer JS -->
     <script src="assets/js/vendor/modernizr-3.5.0.min.js"></script>
@@ -151,7 +150,7 @@
             <div class="col-lg-4 col-md-8 col-12 col-sm-8 order-lg-last">
               <div class="mini-cart-option">
                 <ul>
-                  <li class="compare">
+                  <!-- <li class="compare">
                     <a class="ha-toggle" href="compare.html"
                       ><span class="lnr lnr-sync"></span>Product compare</a
                     >
@@ -161,7 +160,7 @@
                       ><span class="lnr lnr-heart"></span
                       ><span class="count">1</span>wishlist</a
                     >
-                  </li>
+                  </li> -->
                   <li class="my-cart">
                     <button type="button" class="ha-toggle">
                       <span class="lnr lnr-cart"></span
@@ -200,7 +199,7 @@
                       </li> -->
                       <!-- <li>
                         <div class="subtotal-text">discount:</div>
-                        <div class="subtotal-price">10%</div>
+                        <div id="discount" class="subtotal-price">10%</div>
                       </li> -->
                       <li>
                         <div class="subtotal-text">Total:</div>
@@ -898,16 +897,18 @@
                 <div class="pro-details-name mb-10">
                   <h3>Bose SoundLink Bluetooth Speaker</h3>
                 </div>
-                <div id="review-Card-Product" class="pro-details-review mb-20">
+                <div class="pro-details-review mb-20">
                   <ul>
                     <li>
-                      <span><i class="fa fa-star"></i></span>
-                      <span><i class="fa fa-star"></i></span>
-                      <span><i class="fa fa-star"></i></span>
-                      <span><i class="fa fa-star"></i></span>
-                      <span><i class="fa fa-star"></i></span>
+                      <span class="yellow"><i class="fa fa-star"></i></span>
+                      <span class="yellow"><i class="fa fa-star"></i></span>
+                      <span class="yellow"><i class="fa fa-star"></i></span>
+                      <span class="yellow"><i class="fa fa-star"></i></span>
+                      <span class="yellow-half-secondary"
+                        ><i class="fa fa-star"></i
+                      ></span>
                     </li>
-                    <li><a href="#">1 Reviews</a></li>
+                    <li><a href="#tab_review">1 Reviews</a></li>
                   </ul>
                 </div>
                 <div class="price-box mb-15">
@@ -1042,14 +1043,13 @@
                   <button
                     type="button"
                     class="nav-link"
-                    id="nav_review"
                     data-bs-toggle="pill"
                     data-bs-target="#tab_review"
                     role="tab"
                     aria-controls="tab_review"
                     aria-selected="false"
                   >
-                    Reviews (1)
+                    <span class="number_review">Reviews (1)</span>
                   </button>
                 </li>
               </ul>
@@ -1544,6 +1544,50 @@
     </div>
     <!--  end related-product -->
 
+    <!-- Chatbot start -->
+    <div id="support_user">
+      <img
+        style="opacity: 0.7; height: auto; width: 80%"
+        src="assets/img/icon/support-user.svg"
+        alt="Hỗ trợ"
+      />
+    </div>
+    <section class="chatbot-container">
+      <div class="chatbot-header">
+        <div
+          style="display: flex; justify-content: center; align-items: center"
+        >
+          <img src="assets/img/logo/logo-sinrato.png" class="logo" />
+        </div>
+        <h1>Nhân viên hỗ trợ</h1>
+        <div
+          id="btn-exit"
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+          "
+        >
+          <img
+            style="height: 25px; width: auto"
+            src="assets/img/icon/exit.svg"
+            alt="exit"
+          />
+        </div>
+      </div>
+      <div class="chatbot-conversation-container" id="chatbot-conversation">
+        <div class="speech speech-ai">Tôi có thể giúp gì cho bạn?</div>
+      </div>
+      <form id="form" class="chatbot-input-container">
+        <input name="user-input" type="text" id="user-input" required />
+        <button id="submit-btn" class="submit-btn">
+          <img src="./chatbot/img/send.svg" class="send-btn-icon" />
+        </button>
+      </form>
+    </section>
+    <!-- Chatbot end -->
+
     <!-- scroll to top -->
     <div class="scroll-top not-visible">
       <i class="fa fa-angle-up"></i>
@@ -1894,11 +1938,14 @@
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/ajax-mail.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="./chatbot/index.js" type="module"></script>
+    <script src="assets/js/script.js"></script>
     <script src="assets/js/toastr.js"></script>
     <script src="./API/api.js" type="module"></script>
     <script src="./API/product-details.js" type="module"></script>
     <script src="./API/logout.js" type="module"></script>
     <script src="./API/review.js" type="module"></script>
+    <script src="./API/search.js" type="module"></script>
     <script src="./API/cart.js" type="module"></script>
   </body>
 </html>

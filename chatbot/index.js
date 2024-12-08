@@ -1,7 +1,6 @@
 import { process } from "./env.js";
 
 const apiKey = process.env.OPENAI_API_KEY;
-console.log(apiKey);
 
 const conversationContainer = document.getElementById("chatbot-conversation");
 const userInputField = document.getElementById("user-input");
@@ -9,7 +8,6 @@ const submitBtn = document.getElementById("submit-btn");
 
 submitBtn.addEventListener("click", (event) => {
   event.preventDefault();
-
   const userInput = userInputField.value.trim();
   if (userInput) {
     appendMessage(userInput, "user");

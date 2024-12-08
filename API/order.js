@@ -55,7 +55,7 @@ export const createOrder = async (orderData) => {
       {},
       { Authorization: `Bearer ${token}` }
     );
-    // Kiểm tra trạng thái phản hồi trực tiếp từ đối tượng JSON
+
     console.log("Response object:", response);
 
     if (response.status === "success") {
