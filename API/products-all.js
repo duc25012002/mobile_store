@@ -52,9 +52,6 @@ export async function createArrayRatingById() {
   const productsAll = await fetchProductListALL();
   const reviewAll = await getProductReviewAll();
 
-  console.log("Danh sách sản phẩm:", productsAll);
-  console.log("Danh sách đánh giá sản phẩm:", reviewAll);
-
   if (!reviewAll || !Array.isArray(reviewAll.data)) {
     console.error("Dữ liệu review không hợp lệ:", reviewAll);
     return [];
@@ -436,7 +433,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const productList = await fetchProductListALL();
   const categorieList = await fetchCategories();
   const ratings = await createArrayRatingById();
-  console.log("kiểm tra ratings khởi tạo:", ratings);
+  // console.log("kiểm tra ratings khởi tạo:", ratings);
   if (
     productList &&
     productList.length > 0 &&

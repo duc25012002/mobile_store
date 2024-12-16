@@ -6,7 +6,21 @@ const handleApiError = (error, context = "") => {
   console.error(`Lỗi trong ${context}:`, error.message);
 };
 
-const getProductReviewsById = async (productId) => {
+export const getProductReviewAll = async (productId) => {
+  try {
+    const response = await apiService.get(`/api/reviews`);
+    if (response.status === "success") {
+      return response || [];
+    } else {
+      throw new Error(response.message || "Không thể lấy danh sách đánh giá.");
+    }
+  } catch (error) {
+    handleApiError(error, "lấy đánh giá sản phẩm");
+    return [];
+  }
+};
+
+export const getProductReviewsById = async (productId) => {
   try {
     const response = await apiService.get(`/api/review/${productId}`);
     if (response.status === "success") {
