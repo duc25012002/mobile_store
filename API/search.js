@@ -410,7 +410,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const maxPrice = parseFloat(values[1]);
 
     handleSearchEvent(event, productList, minPrice, maxPrice);
-    updateUI(minPrice, maxPrice);
   });
 
   // Hàm giả lập xử lý cập nhật UI

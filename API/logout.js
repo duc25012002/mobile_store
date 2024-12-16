@@ -98,7 +98,6 @@ async function logout() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  // console.log("kiểm tra token", token);
 
   checkLoginStatus();
   checkAuthRoutes();
