@@ -74,6 +74,13 @@ async function logout() {
       }
     );
 
+    if (response.status === 302) {
+      toastr.warning("Phiên đăng nhập đã hết hạn, bạn sẽ được chuyển hướng.");
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1500);
+    }
+
     if (response.ok) {
       localStorage.removeItem("token");
       toastr.success("Đăng xuất thành công!");
@@ -93,25 +100,23 @@ async function logout() {
   } catch (error) {
     console.error("Lỗi khi đăng xuất:", error);
     localStorage.removeItem("token");
-    // toastr.error("Có lỗi xảy ra khi đăng xuất!");
+    toastr.success("Đăng xuất thành công!", "Thành công");
   }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-
-  checkLoginStatus();
-  checkAuthRoutes();
-});
-
-setInterval(() => {
-  checkLoginStatus();
-  checkAuthRoutes();
-}, 5000);
-
-window.addEventListener("storage", function (e) {
-  if (e.key === "token") {
-    toastr.info("Token đã thay đổi trên một tab khác!");
+  const intervalId = setInterval(() => {
     checkLoginStatus();
     checkAuthRoutes();
-  }
+  }, 5000);
+
+  window.addEventListener("storage", function (e) {
+    if (e.key === "token") {
+      toastr.info("Token đã thay đổi trên một tab khác!");
+      checkLoginStatus();
+      checkAuthRoutes();
+    }
+  });
+
+  window.addEventListener("beforeunload", () => clearInterval(intervalId));
 });

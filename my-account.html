@@ -108,7 +108,7 @@
             <div class="col-lg-5 col-md-12 col-12 order-sm-last">
               <div class="header-middle-inner">
                 <form action="method">
-                  <div class="top-cat hm1">
+                  <!-- <div class="top-cat hm1">
                     <div class="search-form">
                       <select>
                         <optgroup label="Electronics">
@@ -129,13 +129,19 @@
                         </optgroup>
                       </select>
                     </div>
-                  </div>
+                  </div> -->
                   <input
+                    id="searchInput"
                     type="text"
                     class="top-cat-field"
                     placeholder="Search entire store here"
                   />
-                  <input type="button" class="top-search-btn" value="Search" />
+                  <input
+                    id="searchButton"
+                    type="button"
+                    class="top-search-btn"
+                    value="Search"
+                  />
                 </form>
               </div>
             </div>
@@ -983,7 +989,10 @@
                                   <td>
                                     <a
                                       class="btn btn-secondary"
-                                      href="cart.html"
+                                      href="#"
+                                      title="Order detail view"
+                                      data-bs-target="#order_detail_view"
+                                      data-bs-toggle="modal"
                                       >view</a
                                     >
                                   </td>
@@ -1308,6 +1317,80 @@
     </div>
     <!-- /End Scroll to Top -->
 
+    <div class="modal fade" id="order_detail_view">
+      <div class="container">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3>Chi Tiết Đơn Hàng</h3>
+              <button type="button" class="close" data-bs-dismiss="modal">
+                &times;
+              </button>
+            </div>
+            <div class="modal-body">
+              <div id="order-detail">
+                <div class="order-info">
+                  <p><strong>Mã đơn hàng:</strong> MB86P1733992878FI</p>
+                  <p><strong>Họ tên:</strong> Pham Thuong</p>
+                  <p><strong>Địa chỉ:</strong> 122a Thai Nguyen</p>
+                  <p><strong>Điện thoại:</strong> 0987654321</p>
+                  <p><strong>Ngày tạo:</strong> 08:41 12/12/2024</p>
+                  <p>
+                    <strong>Phương thức thanh toán:</strong> Thanh toán qua
+                    VNPAY
+                  </p>
+                  <p><strong>Trạng thái:</strong> Thành công</p>
+                  <p><strong>Ghi chú:</strong></p>
+                </div>
+
+                <h4>Chi Tiết Sản Phẩm</h4>
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Sản phẩm</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Tổng</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          iPhone 11 Chính hãng - Đã kích hoạt bảo hành VN/A (Màu
+                          Trắng)
+                        </td>
+                        <td>8,393,000 VND</td>
+                        <td>1</td>
+                        <td>8,393,000 VND</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="order-summary">
+                  <p><strong>Tổng giá trị đơn hàng:</strong> 8,393,000 VND</p>
+                </div>
+
+                <!-- <div class="user-info">
+                  <h4>Thông Tin Người Dùng</h4>
+                  <p><strong>Tên:</strong> Test</p>
+                  <p><strong>Email:</strong> test123@gmail.com</p>
+                  <p><strong>Điện thoại:</strong> 09728347777</p>
+                  <p><strong>Địa chỉ:</strong> TN</p>
+                  <img
+                    src="https://ui-avatars.com/api/?name=Test&background=random"
+                    alt="Avatar"
+                    class="user-avatar"
+                  />
+                </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- footer area start -->
     <footer>
       <!-- news-letter area start -->
@@ -1507,5 +1590,6 @@
     <script src="./API/brand.js" type="module"></script>
     <script src="./API/search.js" type="module"></script>
     <script src="./API/cart.js" type="module"></script>
+    <script src="./API/order.js" type="module"></script>
   </body>
 </html>

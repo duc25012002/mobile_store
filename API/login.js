@@ -19,6 +19,8 @@ const getUserId = async () => {
         Authorization: `Bearer ${token}`,
       }
     );
+    console.log("thông tin người dùng", response);
+
     return response.data.id;
   } catch (error) {
     console.error("Error fetching user_id:", error);
@@ -42,8 +44,7 @@ const handleUserId = async () => {
   }
 };
 
-handleUserId();
-
+document.addEventListener("DOMContentLoaded", () => {
   const loginButton = document.querySelector(".btn.btn-secondary");
 
   if (loginButton) {
@@ -93,4 +94,6 @@ handleUserId();
       }
     });
   }
+
+  handleUserId();
 });

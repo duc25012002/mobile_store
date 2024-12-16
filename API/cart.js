@@ -186,6 +186,8 @@ function renderCartCheckout(cartItems) {
 }
 
 function renderMiniCart(cartItems) {
+  // console.log("cập nhật lại miniCard");
+
   totalAmount = cartItems.reduce((acc, item) => acc + item.totalAmount, 0);
   subTotal = cartItems.reduce(
     (acc, item) => acc + item.current_price * item.quantity,

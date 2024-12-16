@@ -80,8 +80,10 @@ button:focus {
 }
 
 img {
-  height: auto;
+  height: 100%;
+  width: 100%;
   max-width: 100%;
+  object-fit: cover;
 }
 
 ul,
@@ -471,6 +473,7 @@ img,
 
 input.top-cat-field {
   border: 1px solid #e0e0e0;
+  border-radius: 6px 0 0 6px;
   color: #a4a4a4;
   font-size: 13px;
   height: 52px;
@@ -1643,6 +1646,18 @@ nav.m-style3 {
 
 .product-name h4:hover a {
   color: #fedc19;
+}
+
+.product-name .product-link {
+  display: inline-block;
+  max-width: 190px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#our_product .product-name .product-link {
+  max-width: 400px;
 }
 
 .ratings {
@@ -3188,7 +3203,7 @@ input#max-price {
   flex-wrap: wrap;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 .per-page {
@@ -3271,8 +3286,8 @@ input#max-price {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  width: 230px;
-  flex: 0 1 auto;
+  width: 300px;
+  flex: 0 0 auto;
   position: relative;
 }
 
@@ -3295,7 +3310,7 @@ input#max-price {
   transform: translateY(-50%);
 }
 
-.sinrato-list-item:hover .sec-img {
+/* .sinrato-list-item:hover .sec-img {
   opacity: 1;
   visibility: visible;
 }
@@ -3303,7 +3318,7 @@ input#max-price {
 .sinrato-list-item:hover .pri-img {
   opacity: 0;
   visibility: hidden;
-}
+} */
 
 .sinrato-list-item-content {
   display: -webkit-box;
@@ -3334,10 +3349,10 @@ input#max-price {
   color: #fedc19;
 }
 
-.sinrato-ratings span {
+/* .sinrato-ratings span {
   color: #666;
   opacity: 0.5;
-}
+} */
 
 .sinrato-box-action {
   -webkit-box-align: center;
@@ -4785,4 +4800,8 @@ label {
 input.form-control,
 select.form-control {
   height: calc(2.25rem + 2px);
+}
+
+.form-select {
+  background-image: none;
 }

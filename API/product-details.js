@@ -1,17 +1,21 @@
 import apiService from "./api.js";
 import { API_CONFIG } from "./api.js";
 import { token } from "./api.js";
-import { selectedProductId } from "./products-all.js";
 import { formatPrice } from "./products-all.js";
 import { updateUserCart } from "./cart.js";
 import { addToCart } from "./cart.js";
 import { user_id } from "./login.js";
 import { calculateAverageRating } from "./review.js";
 import { loadAndRenderCart } from "./cart.js";
+import { selectedProductId } from "./products-all.js";
+import { fetchProductListALL } from "./products-all.js";
+import { extractProductData } from "./products-all.js";
+import { assignBtnAddToCartEvent } from "./products-all.js";
+import { createArrayRatingById } from "./products-all.js";
 
 let variant_Index = 0;
 
-async function getProductDetail(productId) {
+export async function getProductDetail(productId) {
   console.log("Lấy chi tiết sản phẩm với ID:", productId);
   try {
     const productData = await apiService.get(
@@ -22,7 +26,8 @@ async function getProductDetail(productId) {
 
     if (productData) {
       console.log("Thông tin sản phẩm:", productData);
-      renderProductDetail(productData);
+      await renderProductDetail(productData);
+      return productData;
     } else {
       console.error("Không tìm thấy sản phẩm.");
     }
@@ -56,9 +61,12 @@ export function renderStars(averageRating) {
 
 async function renderProductDetail(productData) {
   const productDetailContainer = document.getElementById("product-detail");
-  if (!productDetailContainer || !productData) {
+  if (!productData) {
     toastr.error("Dữ liệu sản phẩm không hợp lệ.");
     productDetailContainer.innerHTML = `<h4 style="text-align: center;">Không thể lấy thông tin sản phẩm.</h4>`;
+    return;
+  } else if (!productDetailContainer) {
+    // console.warn("Không tìm thấy phần tử có id là product-detail");
     return;
   }
 
@@ -133,7 +141,20 @@ async function renderProductDetail(productData) {
             <div id="review-Card-Product" class="pro-details-review mb-20">
               <ul>
                 <li><div class="ratings">${ratingHTML}</div></li>
-                <li><a class="number_review" href="#tab_review">${number_review} Reviews</a></li>
+                <li>
+                    <a
+                      href="#tab_review"
+                      class="number_review" 
+                      type="button"
+                      data-bs-toggle="pill"
+                      data-bs-target="#tab_review"
+                      role="tab"
+                      aria-controls="tab_review"
+                      aria-selected="false"
+                    >
+                      ${number_review} Reviews
+                    </a>
+                </li>
               </ul>
             </div>
             <div class="price-box mb-15">${priceHTML}</div>
@@ -176,7 +197,7 @@ async function renderProductDetail(productData) {
   }
 }
 
-function handleAddToCart(productId) {
+export function handleAddToCart(productId) {
   const quantity =
     parseInt(document.querySelector(".qty-boxx input").value) || 1;
   if (!selectedProductId) {
@@ -187,23 +208,142 @@ function handleAddToCart(productId) {
   } else if (isNaN(quantity) || quantity <= 0) {
     toastr.warning("Số lượng không hợp lệ. Vui lòng nhập số lượng lớn hơn 0.");
   } else {
-    addToCart(user_id, productId, quantity);
-    loadAndRenderCart();
+    addToCart(user_id, productId, quantity).then(loadAndRenderCart);
   }
 }
 
-function handleColorChange(event, element, productData) {
+async function handleColorChange(event, element, productData) {
   event.preventDefault();
   const colorId = parseInt(element.getAttribute("data-id"));
   variant_Index = productData.data.variants.findIndex(
     (variant) => variant.id === colorId
   );
-  renderProductDetail(productData);
+  await renderProductDetail(productData);
 }
 
-if (selectedProductId) {
-  getProductDetail(selectedProductId);
-} else {
-  console.error("Không có ID sản phẩm được chọn.");
-  toastr.error("Không có ID sản phẩm được chọn.");
+async function renderRelatedProduct(productData, id) {
+  const currentProduct = productData.find(
+    (product) => product.products_id === Number(id)
+  );
+
+  if (!currentProduct) {
+    console.warn("Không tìm thấy sản phẩm với id này");
+    return;
+  }
+
+  const relatedProducts = productData.filter(
+    (product) => product.category === currentProduct.category
+  );
+
+  // console.log("sản phẩm lọc được", relatedProducts);
+
+  const containers = document.querySelectorAll(
+    ".related-product-area .product-item"
+  );
+
+  if (containers.length === 0) {
+    // console.warn("Không tìm thấy phần tử .related-product-area .product-item");
+    return;
+  }
+
+  containers.forEach((container, index) => {
+    const product = relatedProducts[index % relatedProducts.length];
+
+    const discountedPrice =
+      parseFloat(product.price) *
+      (1 - parseFloat(product.discount).toFixed(0) / 100);
+
+    const productHTML = `
+      <div class="product-thumb">
+        <a href="product-details.html" data-product-id="${
+          product.products_id
+        }" >
+          <img src="${API_CONFIG.baseURL}/${
+      product.image_url
+    }" class="pri-img" alt="${product.title}" />
+          <img src="${API_CONFIG.baseURL}/${
+      product.image_url
+    }" class="sec-img" alt="${product.title}" />
+        </a>
+        <div class="box-label">
+          <div class="label-product label_sale">
+            <span>-${Number(product.discount).toFixed(0)}%</span>
+          </div>
+        </div>
+        <div class="action-links">
+          <a href="#" title="Wishlist"><i class="lnr lnr-heart"></i></a>
+          <a href="#" title="Compare"><i class="lnr lnr-sync"></i></a>
+          <a
+            href="#"
+            title="Quick view"
+            data-bs-target="#quickk_view"
+            data-bs-toggle="modal"
+          >
+            <i class="lnr lnr-magnifier"></i>
+          </a>
+        </div>
+      </div>
+      <div class="product-caption">
+        <div class="manufacture-product">
+          <p>
+            <a href="shop-grid-left-sidebar.html">${product.category}</a>
+          </p>
+        </div>
+        <div class="product-name">
+          <h4>
+            <a href="product-details.html" class="product-link" data-product-id="${
+              product.products_id
+            }">${product.title}</a>
+          </h4>
+        </div>
+        <div class="ratings">
+          ${renderStars(product.rating)}
+        </div>
+        <div class="price-box">
+          <span class="regular-price">
+            <span class="special-price">${formatPrice(discountedPrice)}</span>
+          </span>
+          <span class="old-price"><del>${formatPrice(
+            product.price
+          )}</del></span>
+        </div>
+        <button class="btn-cart" type="button" data-product-id="${product.id}">
+            Add to cart
+        </button>
+      </div>
+    `;
+
+    container.innerHTML = productHTML;
+  });
+  document.querySelectorAll("[data-product-id]").forEach((element) => {
+    element.addEventListener("click", (event) => {
+      const selectedProductId = element.getAttribute("data-product-id");
+      if (selectedProductId) {
+        localStorage.setItem("selectedProductId", selectedProductId);
+      } else {
+        console.error("Không có ID sản phẩm được chọn.");
+      }
+    });
+  });
+
+  assignBtnAddToCartEvent();
 }
+
+async function loadAndRenderProductDetail() {
+  try {
+    if (!selectedProductId) {
+      throw new Error("Không có ID sản phẩm được chọn.");
+    }
+    const productList = await fetchProductListALL();
+    const ratings = await createArrayRatingById();
+    const extractedProducts = await extractProductData(productList, ratings);
+    await getProductDetail(selectedProductId);
+    await renderRelatedProduct(extractedProducts, selectedProductId);
+  } catch (error) {
+    console.warn("ID sản phẩm chưa được chọn", error.message);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadAndRenderProductDetail();
+});

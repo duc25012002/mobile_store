@@ -5,6 +5,9 @@ import { user_id } from "./login.js";
 import { addToCart } from "./cart.js";
 import { loadAndRenderCart } from "./cart.js";
 import { fetchProductListALL } from "./products-all.js";
+import { renderStars } from "./product-details.js";
+import { extractProductData } from "./products-all.js";
+import { createArrayRatingById } from "./products-all.js";
 
 function filterByKeyword(
   products,
@@ -66,84 +69,45 @@ function filterByPrice(products, minPrice, maxPrice) {
   });
 }
 
-// async function searchProducts(
-//   products,
-//   keyword,
-//   minPrice,
-//   maxPrice,
-//   searchFields = ["title", "info", "category_name"]
-// ) {
-//   try {
-//     console.log("nhỏ", minPrice);
-//     console.log("lớn", maxPrice);
+function filterSort(sortValue, searchProductList) {
+  switch (sortValue) {
+    case "Relevance":
+      return searchProductList;
 
-//     const lowerCaseKeyword = keyword.toLowerCase();
+    case "NameAZ":
+      return searchProductList.sort((a, b) => {
+        if (a.title < b.title) return -1;
+        if (a.title > b.title) return 1;
+        return 0;
+      });
 
-//     const filteredProducts = products.filter((product) => {
-//       const directFieldsMatch = searchFields.some(
-//         (field) =>
-//           product[field] &&
-//           product[field].toString().toLowerCase().includes(lowerCaseKeyword)
-//       );
+    case "NameZA":
+      return searchProductList.sort((a, b) => {
+        if (a.title > b.title) return -1;
+        if (a.title < b.title) return 1;
+        return 0;
+      });
 
-//       const specificationsMatch =
-//         product.specifications &&
-//         ["screen_type", "screen_resolution"].some(
-//           (field) =>
-//             product.specifications[field] &&
-//             product.specifications[field]
-//               .toString()
-//               .toLowerCase()
-//               .includes(lowerCaseKeyword)
-//         );
+    case "Price":
+      return searchProductList.sort((a, b) => {
+        return parseFloat(a.price) - parseFloat(b.price);
+      });
 
-//       const variantsMatch =
-//         product.variants &&
-//         product.variants.some(
-//           (variant) =>
-//             ["color", "price"].some(
-//               (field) =>
-//                 variant[field] &&
-//                 variant[field]
-//                   .toString()
-//                   .toLowerCase()
-//                   .includes(lowerCaseKeyword)
-//             ) ||
-//             (variant.rom &&
-//               variant.rom.capacity &&
-//               variant.rom.capacity
-//                 .toString()
-//                 .toLowerCase()
-//                 .includes(lowerCaseKeyword))
-//         );
+    case "Rating":
+      return searchProductList.sort((a, b) => {
+        return parseFloat(b.rating) - parseFloat(a.rating);
+      });
 
-//       const priceInRange =
-//         product.variants &&
-//         product.variants.some(
-//           (variant) =>
-//             variant.price &&
-//             parseFloat(variant.price) >= minPrice &&
-//             parseFloat(variant.price) <= maxPrice
-//         );
-
-//       return (
-//         (directFieldsMatch || specificationsMatch || variantsMatch) &&
-//         priceInRange
-//       );
-//     });
-
-//     return filteredProducts;
-//   } catch (error) {
-//     console.error("Lỗi trong quá trình tìm kiếm sản phẩm:", error);
-//     return [];
-//   }
-// }
+    default:
+      return searchProductList;
+  }
+}
 
 async function handleSearchEvent(
   event,
   productList,
   minPrice = 0,
-  maxPrice = Infinity
+  maxPrice = 100000000
 ) {
   if (
     event.key === "Enter" ||
@@ -157,12 +121,15 @@ async function handleSearchEvent(
     if (keyword || event.type === "sliderValuesUpdated") {
       const searchFields = ["title", "info", "category_name"];
 
+      console.log("Bắt đầu lọc theo từ khóa...");
       const filteredByKeyword = filterByKeyword(
         productList,
         keyword,
         searchFields
       );
+      console.log("Kết quả sau khi lọc từ khóa:", keyword, filteredByKeyword);
 
+      console.log("Bắt đầu lọc theo giá...");
       const filteredByPrice = filterByPrice(
         filteredByKeyword,
         minPrice,
@@ -176,19 +143,17 @@ async function handleSearchEvent(
           "searchResults",
           JSON.stringify(filteredByPrice)
         );
-        toastr.success(`Tìm thấy ${filteredByPrice.length} sản phẩm phù hợp.`);
 
         const checkSearchWindow = document.getElementById("price-slider");
         if (!checkSearchWindow) {
           setTimeout(() => {
             window.location.href = `shop-grid-left-sidebar.html`;
           }, 1000);
-        } else {
-          renderSearchResults(filteredByPrice);
         }
+        return filterByPrice;
       } else {
         toastr.warning("Không tìm thấy sản phẩm phù hợp!!!");
-        renderSearchResults(filteredByPrice);
+        return [];
       }
     } else {
       toastr.info("Vui lòng nhập từ khóa để tìm kiếm.");
@@ -214,23 +179,24 @@ function renderSearchResults(searchResults) {
   }
 
   searchResults.forEach((product) => {
-    const categoryName = product.category_name || "Chưa có danh mục";
+    const categoryName = product.category || "Chưa có danh mục";
     const title = product.title || "Không có tên sản phẩm";
-    const description = product.description || "Không có mô tả gì về sản phẩm";
-    const price = parseFloat(
-      product.variants && product.variants[0] ? product.variants[0].price : 0
-    ).toFixed(2);
-    const discount = product.discount
-      ? `-${Number(product.discount).toFixed(0)}%`
-      : "";
+    const description = product.info || "Không có mô tả gì về sản phẩm";
+    const price = parseFloat(product.price).toFixed(2);
+    const discount = Number(product.discount).toFixed(0);
+    let discountHTML = "";
+    if (discount > 0) {
+      discountHTML = `
+        <div class="label-product label_sale">
+          <span>-${discount}%</span>
+        </div>
+      `;
+    }
     const detailsUrl = "product-details.html";
 
     const primaryImageUrl =
-      product.variants &&
-      product.variants[0] &&
-      product.variants[0].images &&
-      product.variants[0].images[0]
-        ? `${API_CONFIG.baseURL}/${product.variants[0].images[0].image_url}`
+      product.image_url && product.image_url
+        ? `${API_CONFIG.baseURL}/${product.image_url}`
         : "";
 
     const productHTML = `
@@ -242,13 +208,7 @@ function renderSearchResults(searchResults) {
             <img src="${primaryImageUrl}" class="sec-img" alt="${title}" />
           </a>
           <div class="box-label">
-            ${
-              discount
-                ? `
-            <div class="label-product label_sale"><span>${discount}</span></div>
-            `
-                : ""
-            }
+            ${discountHTML}
           </div>
           <div class="action-links">
             <a href="#" title="Wishlist"><i class="lnr lnr-heart"></i></a>
@@ -270,19 +230,19 @@ function renderSearchResults(searchResults) {
           <div class="product-name">
             <h4>
               <a href="${detailsUrl}" data-product-id="${
-      product.id
+      product.products_id
     }">${title}</a>
             </h4>
           </div>
           <div class="ratings">
-            ${generateStarRatings(5)}
+            ${renderStars(5)}
             <!-- Sử dụng hàm để tạo sao -->
           </div>
           <div class="price-box">
             <span class="regular-price">${formatPrice(price)}</span>
           </div>
             <button class="btn-cart" type="button" data-product-id="${
-              product.variants[0].id
+              product.id
             }">
               Add to cart
             </button>
@@ -314,7 +274,7 @@ function renderSearchResults(searchResults) {
               <a href="product-details.html">${title}</a>
             </h4>
           </div>
-          <div class="sinrato-ratings mb-15">${generateStarRatings(5)}</div>
+          <div class="sinrato-ratings mb-15">${renderStars(5)}</div>
           <div class="sinrato-product-des">
             <p>${description}</p>
           </div>
@@ -327,7 +287,7 @@ function renderSearchResults(searchResults) {
           </span>
         </div>
             <button class="btn-cart" type="button" data-product-id="${
-              product.variants[0].id
+              product.id
             }">
                 Add to cart
             </button>
@@ -382,25 +342,47 @@ function renderSearchResults(searchResults) {
   });
 }
 
-function generateStarRatings(rating) {
-  const fullStar = '<span class="yellow"><i class="lnr lnr-star"></i></span>';
-  const emptyStar = '<span><i class="lnr lnr-star"></i></span>';
-  const stars = fullStar.repeat(rating) + emptyStar.repeat(5 - rating);
-  return stars;
+async function standardize_searchResults(event) {
+  const savedSearchResults = sessionStorage.getItem("searchResults");
+  if (!savedSearchResults) {
+    console.log("chưa có dữ liệu tìm kiếm!!!");
+    return;
+  }
+  const searchResults = JSON.parse(savedSearchResults);
+  const ratings = await createArrayRatingById();
+  const newSearchResults = await extractProductData(searchResults, ratings);
+  if (newSearchResults.length > 0 && event) {
+    toastr.success(`Tìm thấy ${newSearchResults.length} sản phẩm phù hợp.`);
+  }
+  renderSearchResults(newSearchResults);
+  return newSearchResults;
 }
+
 const searchButton = document.getElementById("searchButton");
 const searchInput = document.getElementById("searchInput");
+const sortWrapper = document.querySelector(".product-short .nice-select");
 
 document.addEventListener("DOMContentLoaded", async () => {
   const productList = await fetchProductListALL();
   const savedSearchResults = sessionStorage.getItem("searchResults");
+  const searchResults = JSON.parse(savedSearchResults);
+  const ratings = await createArrayRatingById();
+  const extractedProducts = await extractProductData(searchResults, ratings);
+  if (savedSearchResults) {
+    renderSearchResults(extractedProducts);
+  }
 
   searchButton.addEventListener("click", (event) => {
     handleSearchEvent(event, productList);
+    standardize_searchResults(event);
   });
-  searchInput.addEventListener("keypress", (event) => {
-    handleSearchEvent(event, productList);
+  searchInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      handleSearchEvent(event, productList);
+      standardize_searchResults(event);
+    }
   });
+
   // Lắng nghe sự kiện từ slider
   window.addEventListener("sliderValuesUpdated", (event) => {
     const values = event.detail;
@@ -410,15 +392,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     const maxPrice = parseFloat(values[1]);
 
     handleSearchEvent(event, productList, minPrice, maxPrice);
+    standardize_searchResults(event);
   });
 
-  // Hàm giả lập xử lý cập nhật UI
-  function updateUI(min, max) {
-    console.log(`Cập nhật giao diện với khoảng giá từ ${min} đến ${max}`);
-  }
+  // Lắng nghe sự kiện thay đổi sắp xếp
+  if (sortWrapper) {
+    const observer = new MutationObserver(() => {
+      const processMutation = async () => {
+        const selectedOption = sortWrapper.querySelector(".option.selected");
+        if (selectedOption) {
+          const selectedValue = selectedOption.getAttribute("data-value");
+          try {
+            const productList = await standardize_searchResults();
+            const sortResults = filterSort(selectedValue, productList);
+            // console.log("Lắng nghe sự kiện thành công", sortResults);
+            renderSearchResults(sortResults);
+          } catch (error) {
+            console.error("Có lỗi xảy ra khi xử lý kết quả:", error);
+          }
+        }
+      };
+      processMutation();
+    });
 
-  if (savedSearchResults) {
-    const searchResults = JSON.parse(savedSearchResults);
-    renderSearchResults(searchResults);
+    observer.observe(sortWrapper, {
+      childList: true,
+      subtree: true,
+    });
   }
 });

@@ -9,7 +9,7 @@ export const fetchCategories = async () => {
     const response = await apiService.get(endpoint, {});
 
     if (response.status === "success" && response.data) {
-      console.log("Danh sách các hãng:", response.data);
+      // console.log("Danh sách các hãng:", response.data);
       return response.data;
     } else {
       throw new Error(response.message || "Không lấy được danh sách các hãng.");
