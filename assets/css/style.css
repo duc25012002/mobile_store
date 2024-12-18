@@ -478,7 +478,7 @@ input.top-cat-field {
   font-size: 13px;
   height: 52px;
   padding: 0 10px;
-  width: calc(100% - 300px);
+  width: calc(100% - 160px);
   float: left;
 }
 

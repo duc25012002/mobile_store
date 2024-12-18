@@ -7,7 +7,7 @@ import { loadAndRenderCart } from "./cart.js";
 import { fetchProductListALL } from "./products-all.js";
 import { renderStars } from "./product-details.js";
 import { extractProductData } from "./products-all.js";
-import { createArrayRatingById } from "./products-all.js";
+import { createArrayRatingId } from "./products-all.js";
 
 function filterByKeyword(
   products,
@@ -121,22 +121,27 @@ async function handleSearchEvent(
     if (keyword || event.type === "sliderValuesUpdated") {
       const searchFields = ["title", "info", "category_name"];
 
-      console.log("Bắt đầu lọc theo từ khóa...");
+      // console.log("Bắt đầu lọc theo từ khóa...");
       const filteredByKeyword = filterByKeyword(
         productList,
         keyword,
         searchFields
       );
-      console.log("Kết quả sau khi lọc từ khóa:", keyword, filteredByKeyword);
+      // console.log("Kết quả sau khi lọc từ khóa:", keyword, filteredByKeyword);
 
-      console.log("Bắt đầu lọc theo giá...");
+      // console.log("Bắt đầu lọc theo giá...");
       const filteredByPrice = filterByPrice(
         filteredByKeyword,
         minPrice,
         maxPrice
       );
 
-      console.log("Kết quả tìm kiếm sau khi lọc:", filteredByPrice);
+      // console.log(
+      //   "Kết quả sau khi lọc theo giá:",
+      //   minPrice,
+      //   maxPrice,
+      //   filteredByPrice
+      // );
 
       if (filteredByPrice.length > 0) {
         sessionStorage.setItem(
@@ -146,13 +151,14 @@ async function handleSearchEvent(
 
         const checkSearchWindow = document.getElementById("price-slider");
         if (!checkSearchWindow) {
+          sessionStorage.setItem("searchKeyword", searchInput.value);
           setTimeout(() => {
             window.location.href = `shop-grid-left-sidebar.html`;
-          }, 1000);
+          }, 2000);
         }
         return filterByPrice;
       } else {
-        toastr.warning("Không tìm thấy sản phẩm phù hợp!!!");
+        sessionStorage.removeItem("searchResults");
         return [];
       }
     } else {
@@ -163,13 +169,13 @@ async function handleSearchEvent(
 
 function renderSearchResults(searchResults) {
   const shopProductWrap = document.querySelector(".shop-product-wrap");
-  console.log("kiểm tra trước khi render:", searchResults);
+  // console.log("kiểm tra trước khi render:", searchResults);
   if (!shopProductWrap) {
     return;
   }
   shopProductWrap.innerHTML = "";
 
-  if (searchResults.length === 0) {
+  if (!searchResults || searchResults.length === 0) {
     shopProductWrap.innerHTML = `
       <div class="col-12">
         <p class="text-center mb-5">Không tìm thấy sản phẩm nào phù hợp.</p>
@@ -203,7 +209,7 @@ function renderSearchResults(searchResults) {
     <div class="col-lg-3 col-md-4 col-sm-6">
       <div class="product-item mb-30">
         <div class="product-thumb">
-          <a href="${detailsUrl}" data-product-id="${product.id}">
+          <a href="${detailsUrl}" data-product-id="${product.products_id}">
             <img src="${primaryImageUrl}" class="pri-img" alt="${title}" />
             <img src="${primaryImageUrl}" class="sec-img" alt="${title}" />
           </a>
@@ -235,7 +241,7 @@ function renderSearchResults(searchResults) {
             </h4>
           </div>
           <div class="ratings">
-            ${renderStars(5)}
+            ${renderStars(product.rating)}
             <!-- Sử dụng hàm để tạo sao -->
           </div>
           <div class="price-box">
@@ -251,7 +257,9 @@ function renderSearchResults(searchResults) {
           <div class="sinrato-list-item mb-30">
       <div class="d-flex">
         <div class="sinrato-thumb">
-          <a href="product-details.html">
+          <a href="product-details.html" data-product-id="${
+            product.products_id
+          }">
             <img src="${primaryImageUrl}" class="pri-img" alt="" />
             <img src="${primaryImageUrl}" class="sec-img" alt="" />
           </a>
@@ -271,10 +279,14 @@ function renderSearchResults(searchResults) {
           </div>
           <div class="sinrato-product-name">
             <h4>
-              <a href="product-details.html">${title}</a>
+              <a href="product-details.html" data-product-id="${
+                product.products_id
+              }">${title}</a>
             </h4>
           </div>
-          <div class="sinrato-ratings mb-15">${renderStars(5)}</div>
+          <div class="sinrato-ratings mb-15">${renderStars(
+            product.rating
+          )}</div>
           <div class="sinrato-product-des">
             <p>${description}</p>
           </div>
@@ -344,57 +356,60 @@ function renderSearchResults(searchResults) {
 
 async function standardize_searchResults(event) {
   const savedSearchResults = sessionStorage.getItem("searchResults");
+  const searchResults = JSON.parse(savedSearchResults);
+  const ratings = await createArrayRatingId();
+  const newSearchResults = await extractProductData(searchResults, ratings);
+
   if (!savedSearchResults) {
     console.log("chưa có dữ liệu tìm kiếm!!!");
+    toastr.warning("Không tìm thấy sản phẩm phù hợp!!!");
+    // console.log(searchResults);
+    renderSearchResults(searchResults);
     return;
   }
-  const searchResults = JSON.parse(savedSearchResults);
-  const ratings = await createArrayRatingById();
-  const newSearchResults = await extractProductData(searchResults, ratings);
   if (newSearchResults.length > 0 && event) {
     toastr.success(`Tìm thấy ${newSearchResults.length} sản phẩm phù hợp.`);
+    // console.log("sản phẩm phù hợp", newSearchResults);
+    renderSearchResults(newSearchResults);
   }
-  renderSearchResults(newSearchResults);
+
   return newSearchResults;
 }
-
-const searchButton = document.getElementById("searchButton");
-const searchInput = document.getElementById("searchInput");
-const sortWrapper = document.querySelector(".product-short .nice-select");
 
 document.addEventListener("DOMContentLoaded", async () => {
   const productList = await fetchProductListALL();
   const savedSearchResults = sessionStorage.getItem("searchResults");
   const searchResults = JSON.parse(savedSearchResults);
-  const ratings = await createArrayRatingById();
+  const ratings = await createArrayRatingId();
   const extractedProducts = await extractProductData(searchResults, ratings);
-  if (savedSearchResults) {
+
+  if (extractedProducts) {
+    const searchKeyword = sessionStorage.getItem("searchKeyword");
+    if (searchKeyword) {
+      const searchInput = document.querySelector("#searchInput");
+      if (searchInput) {
+        searchInput.value = searchKeyword;
+      }
+    }
     renderSearchResults(extractedProducts);
+  } else {
+    console.log("không thể loading các sản phẩm tìm kiếm được");
   }
 
-  searchButton.addEventListener("click", (event) => {
-    handleSearchEvent(event, productList);
-    standardize_searchResults(event);
+  const searchButton = document.getElementById("searchButton");
+  const searchInput = document.getElementById("searchInput");
+  const sortWrapper = document.querySelector(".product-short .nice-select");
+
+  searchButton.addEventListener("click", async (event) => {
+    await handleSearchEvent(event, productList);
+    await standardize_searchResults(event);
   });
-  searchInput.addEventListener("keydown", (event) => {
+  searchInput.addEventListener("keydown", async (event) => {
     if (event.key === "Enter") {
-      handleSearchEvent(event, productList);
-      standardize_searchResults(event);
+      await handleSearchEvent(event, productList);
+      await standardize_searchResults(event);
     }
   });
-
-  // Lắng nghe sự kiện từ slider
-  window.addEventListener("sliderValuesUpdated", (event) => {
-    const values = event.detail;
-    console.log("Khoảng giá đã được cập nhật:", values);
-
-    const minPrice = parseFloat(values[0]);
-    const maxPrice = parseFloat(values[1]);
-
-    handleSearchEvent(event, productList, minPrice, maxPrice);
-    standardize_searchResults(event);
-  });
-
   // Lắng nghe sự kiện thay đổi sắp xếp
   if (sortWrapper) {
     const observer = new MutationObserver(() => {
@@ -420,4 +435,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       subtree: true,
     });
   }
+  // Lắng nghe sự kiện từ slider
+  window.addEventListener("sliderValuesUpdated", (event) => {
+    const values = event.detail;
+    // console.log("Khoảng giá đã được cập nhật:", values);
+
+    const minPrice = parseFloat(values[0]);
+    const maxPrice = parseFloat(values[1]);
+
+    handleSearchEvent(event, productList, minPrice, maxPrice);
+    standardize_searchResults(event);
+  });
 });

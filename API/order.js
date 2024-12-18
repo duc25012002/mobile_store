@@ -163,9 +163,9 @@ function renderOrderDetail(orderDetail) {
     .join("");
 
   const orderSummaryHtml = `
-      <p><strong>Tổng giá trị đơn hàng:</strong> ${orderDetail.total_price.toLocaleString(
+      <p><strong>Tổng giá trị đơn hàng: <span style= "color: red;"">${orderDetail.total_price.toLocaleString(
         "vi-VN"
-      )} VND</p>
+      )} VND</span></strong></p>
   `;
 
   const modalBody = document.querySelector("#order-detail");

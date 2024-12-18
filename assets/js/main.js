@@ -765,7 +765,6 @@ let values = [];
     openedSymbol: "-",
   });
 
-  // pricing filter
   const formatPrice = (price) =>
     new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -786,13 +785,17 @@ let values = [];
         detail: ui.values,
       });
       window.dispatchEvent(customEvent);
+
+      // Lưu giá trị vào sessionStorage khi người dùng điều chỉnh slider
+      sessionStorage.setItem("minPrice", ui.values[0]);
+      sessionStorage.setItem("maxPrice", ui.values[1]);
     },
   });
 
   // Hiển thị giá trị ban đầu cho slider và input
   function initializeSliderValues() {
-    const minPrice = localStorage.getItem("minPrice");
-    const maxPrice = localStorage.getItem("maxPrice");
+    const minPrice = sessionStorage.getItem("minPrice");
+    const maxPrice = sessionStorage.getItem("maxPrice");
 
     if (minPrice !== null && maxPrice !== null) {
       $("#price-slider").slider("values", [

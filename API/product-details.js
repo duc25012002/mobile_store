@@ -11,12 +11,12 @@ import { selectedProductId } from "./products-all.js";
 import { fetchProductListALL } from "./products-all.js";
 import { extractProductData } from "./products-all.js";
 import { assignBtnAddToCartEvent } from "./products-all.js";
-import { createArrayRatingById } from "./products-all.js";
+import { createArrayRatingId } from "./products-all.js";
 
 let variant_Index = 0;
 
 export async function getProductDetail(productId) {
-  console.log("Lấy chi tiết sản phẩm với ID:", productId);
+  // console.log("Lấy chi tiết sản phẩm với ID:", productId);
   try {
     const productData = await apiService.get(
       `/api/product-detail/${productId}`,
@@ -25,7 +25,7 @@ export async function getProductDetail(productId) {
     );
 
     if (productData) {
-      console.log("Thông tin sản phẩm:", productData);
+      // console.log("Thông tin sản phẩm:", productData);
       await renderProductDetail(productData);
       return productData;
     } else {
@@ -41,8 +41,9 @@ export async function getProductDetail(productId) {
 }
 
 export function renderStars(averageRating) {
-  const fullStars = Math.floor(averageRating);
-  const halfStar = averageRating % 1 > 0.5;
+  const roundedRating = Math.round(averageRating * 2) / 2;
+  const fullStars = Math.floor(roundedRating);
+  const halfStar = roundedRating % 1 === 0.5;
   const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
 
   const fullStarHTML = '<span class="yellow"><i class="fa fa-star"></i></span>';
@@ -94,16 +95,21 @@ async function renderProductDetail(productData) {
       </a>
     </div>`;
   const ratingHTML = renderStars(averageRating);
-  const priceHTML = `
-  <span class="regular-price">
-    <span class="special-price">${formatPrice(
-      variant.price * (1 - discount / 100)
-    )}</span>
-  </span>
-  <span class="old-price">
-    <del>${formatPrice(variant.price)}</del>
-  </span>
-  `;
+  const priceHtml =
+    discount > 0
+      ? `
+      <span class="regular-price">
+        <span class="special-price">${formatPrice(
+          variant.price * (1 - discount / 100)
+        )}</span>
+      </span>
+      <span class="old-price"><del>${formatPrice(variant.price)}</del></span>
+    `
+      : `
+      <span class="regular-price">
+        <span class="special-price">${formatPrice(variant.price)}</span>
+      </span>
+    `;
   const detailsHTML = `
     <li><span>Brands :</span><a href="#">${category_name}</a></li>
     <li><span>Screen size :</span>${specifications.screen_size}</li>
@@ -157,7 +163,7 @@ async function renderProductDetail(productData) {
                 </li>
               </ul>
             </div>
-            <div class="price-box mb-15">${priceHTML}</div>
+            <div class="price-box mb-15">${priceHtml}</div>
             <div class="product-detail-sort-des pb-20">
               ${infoHTML}
             </div>
@@ -248,10 +254,34 @@ async function renderRelatedProduct(productData, id) {
 
   containers.forEach((container, index) => {
     const product = relatedProducts[index % relatedProducts.length];
+    const discount = !isNaN(parseFloat(product.discount))
+      ? parseFloat(product.discount)
+      : 0;
+    const discountedPrice = parseFloat(product.price) * (1 - discount / 100);
+    let discountHTML = "";
+    if (discount > 0) {
+      discountHTML = `
+        <div class="label-product label_sale">
+          <span>-${discount}%</span>
+        </div>
+      `;
+    }
+    const priceHtml = discount
+      ? `
+          <span class="regular-price">
+            <span class="special-price">${formatPrice(discountedPrice)}</span>
+          </span>
+          <span class="old-price"><del>${formatPrice(
+            product.price
+          )}</del></span>
+        `
+      : `
+          <span class="regular-price">
+            <span class="special-price">${formatPrice(product.price)}</span>
+          </span>
+        `;
 
-    const discountedPrice =
-      parseFloat(product.price) *
-      (1 - parseFloat(product.discount).toFixed(0) / 100);
+    console.log("giảm giá", discountedPrice);
 
     const productHTML = `
       <div class="product-thumb">
@@ -266,9 +296,7 @@ async function renderRelatedProduct(productData, id) {
     }" class="sec-img" alt="${product.title}" />
         </a>
         <div class="box-label">
-          <div class="label-product label_sale">
-            <span>-${Number(product.discount).toFixed(0)}%</span>
-          </div>
+          ${discountHTML}
         </div>
         <div class="action-links">
           <a href="#" title="Wishlist"><i class="lnr lnr-heart"></i></a>
@@ -300,12 +328,7 @@ async function renderRelatedProduct(productData, id) {
           ${renderStars(product.rating)}
         </div>
         <div class="price-box">
-          <span class="regular-price">
-            <span class="special-price">${formatPrice(discountedPrice)}</span>
-          </span>
-          <span class="old-price"><del>${formatPrice(
-            product.price
-          )}</del></span>
+            ${priceHtml}
         </div>
         <button class="btn-cart" type="button" data-product-id="${product.id}">
             Add to cart
@@ -332,10 +355,10 @@ async function renderRelatedProduct(productData, id) {
 async function loadAndRenderProductDetail() {
   try {
     if (!selectedProductId) {
-      throw new Error("Không có ID sản phẩm được chọn.");
+      console.log("Không có ID sản phẩm được chọn.");
     }
     const productList = await fetchProductListALL();
-    const ratings = await createArrayRatingById();
+    const ratings = await createArrayRatingId();
     const extractedProducts = await extractProductData(productList, ratings);
     await getProductDetail(selectedProductId);
     await renderRelatedProduct(extractedProducts, selectedProductId);

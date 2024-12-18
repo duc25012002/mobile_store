@@ -15,6 +15,7 @@ export const getProductReviewAll = async (productId) => {
       throw new Error(response.message || "Không thể lấy danh sách đánh giá.");
     }
   } catch (error) {
+    // console.error(error, "lấy đánh giá sản phẩm");
     handleApiError(error, "lấy đánh giá sản phẩm");
     return [];
   }
@@ -24,7 +25,7 @@ export const getProductReviewsById = async (productId) => {
   try {
     const response = await apiService.get(`/api/review/${productId}`);
     if (response.status === "success") {
-      console.log("danh sách đánh giá:", response);
+      // console.log("danh sách đánh giá:", response);
 
       return response.data || [];
     } else {
@@ -68,6 +69,10 @@ const updateReviews = async (productId) => {
     const reviews = await getProductReviewsById(productId);
     const reviewsContainer = document.querySelector("#reviews-table-body");
     const reviewTabs = document.querySelectorAll(".number_review");
+
+    if (!reviewsContainer) {
+      return;
+    }
 
     if (reviewTabs.length > 0) {
       reviewTabs.forEach((tab) => {
