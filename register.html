@@ -8,9 +8,7 @@
     <meta name="keywords" content="" />
     <meta name="csrf-token" content="your-csrf-token" />
     <!-- Page Title -->
-    <title>
-      Sinrato 
-    </title>
+    <title>Sinrato</title>
     <!--Fevicon-->
     <link rel="icon" href="assets/img/icon/favicon.ico" type="image/x-icon" />
     <!-- Bootstrap css -->
@@ -26,6 +24,8 @@
     <link rel="stylesheet" href="assets/css/style.css" />
     <!-- responsive css -->
     <link rel="stylesheet" href="assets/css/responsive.css" />
+    <link href="assets/css/toastr.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./assets/css/chatbot.css" />
 
     <!-- Modernizer JS -->
     <script src="assets/js/vendor/modernizr-3.5.0.min.js"></script>
@@ -111,7 +111,7 @@
             <div class="col-lg-5 col-md-12 col-12 order-sm-last">
               <div class="header-middle-inner">
                 <form action="method">
-                  <div class="top-cat hm1">
+                  <!-- <div class="top-cat hm1">
                     <div class="search-form">
                       <select>
                         <optgroup label="Electronics">
@@ -132,7 +132,7 @@
                         </optgroup>
                       </select>
                     </div>
-                  </div>
+                  </div> -->
                   <input
                     type="text"
                     class="top-cat-field"
@@ -145,7 +145,7 @@
             <div class="col-lg-4 col-md-8 col-12 col-sm-8 order-lg-last">
               <div class="mini-cart-option">
                 <ul>
-                  <li class="compare">
+                  <!-- <li class="compare">
                     <a class="ha-toggle" href="compare.html"
                       ><span class="lnr lnr-sync"></span>Product compare</a
                     >
@@ -155,7 +155,7 @@
                       ><span class="lnr lnr-heart"></span
                       ><span class="count">1</span>wishlist</a
                     >
-                  </li>
+                  </li> -->
                   <li class="my-cart">
                     <button type="button" class="ha-toggle">
                       <span class="lnr lnr-cart"></span
@@ -906,9 +906,9 @@
                               id="password"
                               required=""
                             />
-                            <button class="pass-show-btn" type="button">
+                            <!-- <button class="pass-show-btn" type="button">
                               Show
-                            </button>
+                            </button> -->
                           </div>
                         </div>
                         <div class="form-group mb-3 row">
@@ -924,9 +924,9 @@
                               id="c-password"
                               required=""
                             />
-                            <button class="pass-show-btn" type="button">
+                            <!-- <button class="pass-show-btn" type="button">
                               Show
-                            </button>
+                            </button> -->
                           </div>
                         </div>
                         <div
@@ -1147,7 +1147,10 @@
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/ajax-mail.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/script.js"></script>
+    <script src="assets/js/toastr.js"></script>
     <script src="./API/api.js" type="module"></script>
+    <script src="./API/cart.js" type="module"></script>
     <script src="./API/register.js" type="module"></script>
   </body>
 </html>

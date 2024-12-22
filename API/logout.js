@@ -101,6 +101,9 @@ async function logout() {
     console.error("Lỗi khi đăng xuất:", error);
     localStorage.removeItem("token");
     toastr.success("Đăng xuất thành công!", "Thành công");
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 1500);
   }
 }
 

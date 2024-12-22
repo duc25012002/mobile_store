@@ -69,6 +69,7 @@
 .chatbot-container .logo {
   grid-area: logo;
   width: 100px;
+  height: auto;
   display: flex;
 }
 

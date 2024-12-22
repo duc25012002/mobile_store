@@ -4568,15 +4568,15 @@ label {
   position: absolute;
   text-transform: capitalize;
   border-radius: 0;
-  background: #878787;
-  border: 1px solid #878787;
+  background: #000000;
+  border: 1px solid #000000;
   color: #fff;
   cursor: pointer;
 }
 
-.login-form .pass-show-btn:hover,
-.login-form .pass-show-btn:focus {
-  background: #333;
+.login-form .pass-show-btn:hover {
+  background: #fedc19;
+  color: #000;
 }
 
 .login-form .form-check label {

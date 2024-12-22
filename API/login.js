@@ -96,4 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   handleUserId();
+
+  
 });
