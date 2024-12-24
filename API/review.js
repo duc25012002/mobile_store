@@ -1,7 +1,8 @@
 import apiService from "./api.js";
 import { selectedProductId } from "./products-all.js";
 import { token, API_CONFIG } from "./api.js";
-
+import { checkPurchasedProduct } from "./order.js";
+import { getOrderList } from "./order.js";
 const handleApiError = (error, context = "") => {
   console.error(`Lỗi trong ${context}:`, error.message);
 };
@@ -64,11 +65,24 @@ const saveReview = async (productId, rating, comment) => {
   }
 };
 
-const updateReviews = async (productId) => {
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("vi-VN", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+};
+
+const renderReviews = async (productId) => {
   try {
     const reviews = await getProductReviewsById(productId);
     const reviewsContainer = document.querySelector("#reviews-table-body");
     const reviewTabs = document.querySelectorAll(".number_review");
+    const reviewFilter = document.querySelector(".review-filter");
+    const reviewFilterWrapper = document.querySelector(
+      ".review-filter .nice-select"
+    );
 
     if (!reviewsContainer) {
       return;
@@ -80,38 +94,66 @@ const updateReviews = async (productId) => {
       });
     }
 
-    reviewsContainer.innerHTML = reviews
-      .map(
-        ({ user, created_at, comment, rating }) => `
-        <tr>
-          <td><strong>${user.name}</strong></td>
-          <td class="text-end">${formatDate(created_at)}</td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <p>${comment}</p>
-            <div class="product-ratings">
-              <ul class="ratting d-flex mt-2">
-                ${renderStars(rating)}
-              </ul>
-            </div>
-          </td>
-        </tr>
-      `
-      )
-      .join("");
+    const displayFilteredReviews = (ratingFilter) => {
+      const filteredReviews =
+        ratingFilter === "all"
+          ? reviews
+          : reviews.filter((review) => review.rating == ratingFilter);
+
+      reviewsContainer.innerHTML = filteredReviews
+        .map(
+          ({ user, created_at, comment, rating }) => `
+          <tr>
+            <td><strong>${user.name}</strong></td>
+            <td class="text-end">${formatDate(created_at)}</td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <p>${comment}</p>
+              <div class="product-ratings">
+                <ul class="ratting d-flex mt-2">
+                  ${renderStars(rating)}
+                </ul>
+              </div>
+            </td>
+          </tr>
+        `
+        )
+        .join("");
+    };
+
+    displayFilteredReviews("all");
+
+    // Lắng nghe sự kiện thay đổi từ gốc `select`
+    // if (reviewFilter) {
+    //   reviewFilter.addEventListener("change", (e) => {
+    //     const selectedValue = e.target.value;
+    //     displayFilteredReviews(selectedValue);
+    //   });
+    // }
+
+    // Đồng bộ sự kiện thay đổi giao diện với `nice-select`
+    if (reviewFilterWrapper) {
+      const observer = new MutationObserver(() => {
+        const selectedOption =
+          reviewFilterWrapper.querySelector(".option.selected");
+        if (selectedOption) {
+          const selectedValue = selectedOption.getAttribute("data-value");
+          // Đồng bộ với phần tử select ẩn và gọi hàm lọc
+          reviewFilter.value = selectedValue;
+          displayFilteredReviews(selectedValue);
+        }
+      });
+
+      // Cấu hình observer để theo dõi sự thay đổi lớp `selected`
+      observer.observe(reviewFilterWrapper, {
+        childList: true, // Lắng nghe sự thay đổi trong các phần tử con
+        subtree: true, // Lắng nghe trong toàn bộ cây DOM con
+      });
+    }
   } catch (error) {
     handleApiError(error, "cập nhật đánh giá");
   }
-};
-
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("vi-VN", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
 };
 
 const renderStars = (rating) => {
@@ -163,11 +205,24 @@ if (elementReview_form) {
       return;
     }
 
+    const orderList = await getOrderList();
+    const hasPurchased = await checkPurchasedProduct(
+      orderList,
+      selectedProductId
+    );
+    if (!hasPurchased) {
+      toastr.warning(
+        `Bạn cần mua sản phẩm này để có thể đánh giá đúng về sản phẩm!`,
+        "Comment chưa được lưu"
+      );
+      return;
+    }
+
     try {
       await saveReview(selectedProductId, rating, comment);
       // alert("Đánh giá của bạn đã được gửi thành công!");
       document.querySelector(".review-form").reset();
-      updateReviews(selectedProductId);
+      renderReviews(selectedProductId);
     } catch (error) {
       toastr.error(`Lỗi khi gửi đánh giá: ${error.message}`, "Lỗi");
       console.error("Lỗi khi gửi đánh giá:", error.message);
@@ -176,5 +231,5 @@ if (elementReview_form) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  updateReviews(selectedProductId);
+  renderReviews(selectedProductId);
 });

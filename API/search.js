@@ -264,13 +264,7 @@ function renderSearchResults(searchResults) {
             <img src="${primaryImageUrl}" class="sec-img" alt="" />
           </a>
           <div class="box-label">
-            ${
-              discount
-                ? `
-            <div class="label-product label_sale"><span>${discount}</span></div>
-            `
-                : ""
-            }
+            ${discountHTML}
           </div>
         </div>
         <div class="sinrato-list-item-content">

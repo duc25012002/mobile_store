@@ -281,7 +281,7 @@ async function renderRelatedProduct(productData, id) {
           </span>
         `;
 
-    console.log("giảm giá", discountedPrice);
+    // console.log("giảm giá", discountedPrice);
 
     const productHTML = `
       <div class="product-thumb">

@@ -345,5 +345,4 @@ document.addEventListener("DOMContentLoaded", async () => {
   const oderList = await getOrderList();
 
   renderOrderList(oderList);
-  // checkPurchasedProduct(orderList, 20);
 });
