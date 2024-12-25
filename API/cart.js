@@ -186,7 +186,6 @@ function renderCartCheckout(cartItems) {
 }
 
 function renderMiniCart(cartItems) {
-  // console.log("cập nhật lại miniCard");
 
   totalAmount = cartItems.reduce((acc, item) => acc + item.totalAmount, 0);
   subTotal = cartItems.reduce(
@@ -199,11 +198,6 @@ function renderMiniCart(cartItems) {
     totalElement[0].textContent = formatPrice(subTotal);
     totalElement[1].textContent = formatPrice(totalAmount);
   }
-
-  // const discountElement = document.getElementById("discount");
-  // if (discountElement) {
-  //   discountElement.textContent = cartItems.discount;
-  // }
 
   const subTotal_miniCart = document.querySelector(
     "#mini_cart .subtotal-text + .subtotal-price"
