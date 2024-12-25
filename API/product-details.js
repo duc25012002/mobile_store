@@ -12,6 +12,7 @@ import { fetchProductListALL } from "./products-all.js";
 import { extractProductData } from "./products-all.js";
 import { assignBtnAddToCartEvent } from "./products-all.js";
 import { createArrayRatingId } from "./products-all.js";
+import { productList } from "./products-all.js";
 
 let variant_Index = 0;
 
@@ -357,7 +358,6 @@ async function loadAndRenderProductDetail() {
     if (!selectedProductId) {
       console.log("Không có ID sản phẩm được chọn.");
     }
-    const productList = await fetchProductListALL();
     const ratings = await createArrayRatingId();
     const extractedProducts = await extractProductData(productList, ratings);
     await getProductDetail(selectedProductId);

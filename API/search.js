@@ -8,6 +8,7 @@ import { fetchProductListALL } from "./products-all.js";
 import { renderStars } from "./product-details.js";
 import { extractProductData } from "./products-all.js";
 import { createArrayRatingId } from "./products-all.js";
+import { productList } from "./products-all.js";
 
 function filterByKeyword(
   products,
@@ -371,7 +372,6 @@ async function standardize_searchResults(event) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const productList = await fetchProductListALL();
   const savedSearchResults = sessionStorage.getItem("searchResults");
   const searchResults = JSON.parse(savedSearchResults);
   const ratings = await createArrayRatingId();
