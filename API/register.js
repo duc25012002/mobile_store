@@ -10,9 +10,8 @@ async function registerUser(data) {
         window.location.href = "index.html";
       }, 1000);
     } else {
-      toastr.error(result.message || "Đăng ký thất bại");
+      toastr.error(result.errors.message || "Đăng ký thất bại");
     }
-
     return result;
   } catch (error) {
     console.error("Error:", error);

@@ -33,6 +33,10 @@
 </head>
 
 <body>
+
+<div class="preloader">
+  <div class="loader"></div>
+</div>
   <!--[if lte IE 9]>
       <p class="browserupgrade">
         You are using an <strong>outdated</strong> browser. Please
@@ -40,6 +44,8 @@
         your experience and security.
       </p>
     <![endif]-->
+
+
 
   <!-- header area start -->
   <header class="header-pos">
@@ -3166,6 +3172,8 @@
   <!-- Quick view modal end -->
 
   <!-- all js include here -->
+
+  
   <script src="assets/js/vendor/jquery-1.12.4.min.js"></script>
   <script src="assets/js/bootstrap.min.js"></script>
   <script src="assets/js/ajax-mail.js"></script>
@@ -3182,6 +3190,15 @@
   <script src="assets/js/main.js"></script>
   <script src="./API/review.js" type="module"></script>
   <script src="./API/cart.js" type="module"></script>
+
+  <script>
+    window.addEventListener('load', () => {
+      const preloader = document.querySelector('.preloader');
+      setTimeout(() => {
+        preloader.style.display = 'none';
+      }, 1500);
+});
+  </script>
 </body>
 
 </html>

@@ -74,7 +74,7 @@ const formatDate = (dateString) => {
   });
 };
 
-const renderReviews = async (productId) => {
+const renderReviews = async (productId, reviews) => {
   try {
     const reviews = await getProductReviewsById(productId);
     const reviewsContainer = document.querySelector("#reviews-table-body");
@@ -167,7 +167,7 @@ const renderStars = (rating) => {
     .join("");
 };
 
-export async function calculateAverageRating(productId) {
+export async function calculateAverageRating(productId, reviews) {
   try {
     const reviews = await getProductReviewsById(productId);
 
@@ -229,6 +229,8 @@ if (elementReview_form) {
     }
   });
 }
+
+// const reviews = await getProductReviewsById(selectedProductId);
 
 document.addEventListener("DOMContentLoaded", () => {
   renderReviews(selectedProductId);

@@ -358,6 +358,7 @@ async function loadAndRenderProductDetail() {
     if (!selectedProductId) {
       console.log("Không có ID sản phẩm được chọn.");
     }
+    // const productList = await fetchProductListALL();
     const ratings = await createArrayRatingId();
     const extractedProducts = await extractProductData(productList, ratings);
     await getProductDetail(selectedProductId);

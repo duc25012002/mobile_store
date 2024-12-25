@@ -53,9 +53,12 @@ const renderCategory = async (categories) => {
   }
 };
 
+
 document.addEventListener("DOMContentLoaded", async () => {
-  const categories = await fetchCategories();
-  if (categories) {
-    renderCategory(categories);
+  const categorieList = await fetchCategories();
+  console.log("");
+  
+  if (categorieList) {
+    renderCategory(categorieList);
   }
 });

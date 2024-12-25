@@ -9,7 +9,6 @@ import { loadAndRenderCart } from "./cart.js";
 import { handleAddToCart } from "./product-details.js";
 import { getProductReviewAll } from "./review.js";
 import { renderStars } from "./product-details.js";
-// import { fetchCategories, renderCategoryProducts } from "./brand.js";
 
 export let selectedProductId = localStorage.getItem("selectedProductId");
 
@@ -433,25 +432,20 @@ async function renderBrandSale(products) {
 
 let productList = [];
 
-fetchProductListALL().then((data) => {
-  productList = data;
-});
-
-let reviewAll = [];
-
-getProductReviewAll().then((data) => {
-  reviewAll = data;
-});
+// fetchProductListALL().then((data) => {
+//   productList = data;
+// });
 
 document.addEventListener("DOMContentLoaded", async () => {
+  const productList = await fetchProductListALL();
   const categorieList = await fetchCategories();
-  // console.log("dữ liệu reviewAll", reviewAll);
-  const ratings = [];
-  if (reviewAll && productList) {
+  const reviewAll = await getProductReviewAll();
+  console.log("dữ liệu reviewAll", reviewAll, productList);
+  let ratings = [];
+  setTimeout(async () => {
     ratings = await createArrayRatingId(productList, reviewAll);
-  }
-
-  // console.log("kiểm tra ratings khởi tạo:", ratings);
+  }, 1000);
+  console.log("kiểm tra ratings khởi tạo:", ratings);
   if (
     productList &&
     productList.length > 0 &&
