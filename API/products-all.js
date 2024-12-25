@@ -48,9 +48,9 @@ export function assignBtnAddToCartEvent() {
   });
 }
 
-export async function createArrayRatingId() {
-  const productsAll = await fetchProductListALL();
-  const reviewAll = await getProductReviewAll();
+export async function createArrayRatingId(productsAll, reviewAll) {
+  console.log("!!!!!!!!!!", reviewAll);
+  console.log("!!!!!!!!!!", productsAll);
 
   if (!reviewAll || !Array.isArray(reviewAll.data)) {
     console.error("Dữ liệu review không hợp lệ:", reviewAll);
@@ -431,10 +431,26 @@ async function renderBrandSale(products) {
   assignBtnAddToCartEvent();
 }
 
+let productList = [];
+
+fetchProductListALL().then((data) => {
+  productList = data;
+});
+
+let reviewAll = [];
+
+getProductReviewAll().then((data) => {
+  reviewAll = data;
+});
+
 document.addEventListener("DOMContentLoaded", async () => {
-  const productList = await fetchProductListALL();
   const categorieList = await fetchCategories();
-  const ratings = await createArrayRatingId();
+  // console.log("dữ liệu reviewAll", reviewAll);
+  const ratings = [];
+  if (reviewAll && productList) {
+    ratings = await createArrayRatingId(productList, reviewAll);
+  }
+
   // console.log("kiểm tra ratings khởi tạo:", ratings);
   if (
     productList &&
@@ -451,3 +467,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     await renderBrandSale(extractedProducts);
   }
 });
+
+export { productList };
