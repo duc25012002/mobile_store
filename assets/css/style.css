@@ -2714,6 +2714,7 @@ a.shop-btn:hover {
 .newsletter-group {
   background: #f0f0f0 none repeat scroll 0 0;
   padding: 36px 0;
+  margin-block-start: 2rem;
 }
 
 .newsletter-box {
@@ -2838,6 +2839,16 @@ a.shop-btn:hover {
   text-transform: capitalize;
 }
 
+.payment-method {
+  width: 250px;
+  height: 30px;
+}
+
+.payment-method>img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
 .widget-title>h4 {
   color: #111;
   font-size: 18px;
