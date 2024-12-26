@@ -214,8 +214,14 @@ if (elementReview_form) {
     try {
       await saveReview(selectedProductId, rating, comment);
       // alert("Đánh giá của bạn đã được gửi thành công!");
+      sessionStorage.setItem(
+        "reviewsById",
+        JSON.stringify(
+          (reviewsById = await getProductReviewsById(selectedProductId))
+        )
+      );
+      await renderReviews(reviewsById);
       document.querySelector(".review-form").reset();
-      renderReviews(selectedProductId);
     } catch (error) {
       toastr.error(`Lỗi khi gửi đánh giá: ${error.message}`, "Lỗi");
       console.error("Lỗi khi gửi đánh giá:", error.message);
