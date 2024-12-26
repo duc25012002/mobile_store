@@ -1,16 +1,13 @@
 import apiService from "./api.js";
 import { API_CONFIG } from "./api.js";
-import { token } from "./api.js";
-import { user_id } from "./login.js";
-import { updateUserCart } from "./cart.js";
-import { addToCart } from "./cart.js";
-import { fetchCategories } from "./brand.js";
-import { loadAndRenderCart } from "./cart.js";
 import { handleAddToCart } from "./product-details.js";
 import { getProductReviewAll } from "./review.js";
 import { renderStars } from "./product-details.js";
+import { categorieList } from "./brand.js";
 
 export let selectedProductId = localStorage.getItem("selectedProductId");
+export let productList = JSON.parse(sessionStorage.getItem("productList"));
+export let ratings = JSON.parse(sessionStorage.getItem("ratings"));
 
 export const formatPrice = (price) =>
   new Intl.NumberFormat("vi-VN", {
@@ -48,11 +45,8 @@ export function assignBtnAddToCartEvent() {
 }
 
 export async function createArrayRatingId(productsAll, reviewAll) {
-  console.log("!!!!!!!!!!", reviewAll);
-  console.log("!!!!!!!!!!", productsAll);
-
   if (!reviewAll || !Array.isArray(reviewAll.data)) {
-    console.error("Dữ liệu review không hợp lệ:", reviewAll);
+    // console.error("Dữ liệu review không hợp lệ:", reviewAll);
     return [];
   }
 
@@ -72,6 +66,9 @@ export async function createArrayRatingId(productsAll, reviewAll) {
       (sum, review) => sum + review.rating,
       0
     );
+
+    console.log("kiểm tra tổng số rating:", totalRating);
+
     const averageRating = totalRating / reviewsForProduct.length;
 
     ratingsID.push({ id: product.id, rating: averageRating });
@@ -201,9 +198,8 @@ async function renderOurProduct(products, categories, ratingsID) {
       const productRatings = ratingsID.filter(
         (rating) => rating.id === product.id
       );
-      const averageRating =
-        productRatings.reduce((acc, curr) => acc + curr.rating, 0) /
-        productRatings.length;
+
+      // console.log("kiểm tra productRatings:", productRatings[0].rating);
 
       productItem.innerHTML = `
         <div class="product-thumb">
@@ -242,7 +238,7 @@ async function renderOurProduct(products, categories, ratingsID) {
                 </h4>
             </div>
             <div class="ratings">
-              ${renderStars(averageRating)}
+              ${renderStars(productRatings[0].rating || 5)}
             </div>
             <div class="price-box">
                 <span class="regular-price">${formatPrice(
@@ -430,22 +426,16 @@ async function renderBrandSale(products) {
   assignBtnAddToCartEvent();
 }
 
-let productList = [];
-
-// fetchProductListALL().then((data) => {
-//   productList = data;
-// });
-
 document.addEventListener("DOMContentLoaded", async () => {
-  const productList = await fetchProductListALL();
-  const categorieList = await fetchCategories();
+  productList = await fetchProductListALL();
+  sessionStorage.setItem("productList", JSON.stringify(productList));
+
   const reviewAll = await getProductReviewAll();
-  console.log("dữ liệu reviewAll", reviewAll, productList);
-  let ratings = [];
-  setTimeout(async () => {
-    ratings = await createArrayRatingId(productList, reviewAll);
-  }, 1000);
-  console.log("kiểm tra ratings khởi tạo:", ratings);
+  ratings = await createArrayRatingId(productList, reviewAll);
+  sessionStorage.setItem("ratings", JSON.stringify(ratings));
+
+  console.log("kiểm tra dữ liệu ratings sau khi tạo:", ratings);
+
   if (
     productList &&
     productList.length > 0 &&
@@ -461,5 +451,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     await renderBrandSale(extractedProducts);
   }
 });
-
-export { productList };

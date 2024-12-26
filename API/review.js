@@ -3,14 +3,18 @@ import { selectedProductId } from "./products-all.js";
 import { token, API_CONFIG } from "./api.js";
 import { checkPurchasedProduct } from "./order.js";
 import { getOrderList } from "./order.js";
+
+export let reviewsById = JSON.parse(sessionStorage.getItem("reviewsById"));
+
 const handleApiError = (error, context = "") => {
   console.error(`Lỗi trong ${context}:`, error.message);
 };
 
-export const getProductReviewAll = async (productId) => {
+export async function getProductReviewAll() {
   try {
     const response = await apiService.get(`/api/reviews`);
     if (response.status === "success") {
+      console.log("danh sách tất cả đánh giá:", response);
       return response || [];
     } else {
       throw new Error(response.message || "Không thể lấy danh sách đánh giá.");
@@ -20,13 +24,13 @@ export const getProductReviewAll = async (productId) => {
     handleApiError(error, "lấy đánh giá sản phẩm");
     return [];
   }
-};
+}
 
 export const getProductReviewsById = async (productId) => {
   try {
     const response = await apiService.get(`/api/review/${productId}`);
     if (response.status === "success") {
-      // console.log("danh sách đánh giá:", response);
+      console.log("danh sách đánh giá của sp có id:", productId, response);
 
       return response.data || [];
     } else {
@@ -74,9 +78,8 @@ const formatDate = (dateString) => {
   });
 };
 
-const renderReviews = async (productId, reviews) => {
+const renderReviews = async (reviews) => {
   try {
-    const reviews = await getProductReviewsById(productId);
     const reviewsContainer = document.querySelector("#reviews-table-body");
     const reviewTabs = document.querySelectorAll(".number_review");
     const reviewFilter = document.querySelector(".review-filter");
@@ -124,14 +127,6 @@ const renderReviews = async (productId, reviews) => {
 
     displayFilteredReviews("all");
 
-    // Lắng nghe sự kiện thay đổi từ gốc `select`
-    // if (reviewFilter) {
-    //   reviewFilter.addEventListener("change", (e) => {
-    //     const selectedValue = e.target.value;
-    //     displayFilteredReviews(selectedValue);
-    //   });
-    // }
-
     // Đồng bộ sự kiện thay đổi giao diện với `nice-select`
     if (reviewFilterWrapper) {
       const observer = new MutationObserver(() => {
@@ -167,13 +162,11 @@ const renderStars = (rating) => {
     .join("");
 };
 
-export async function calculateAverageRating(productId, reviews) {
+export async function calculateAverageRating(reviews) {
   try {
-    const reviews = await getProductReviewsById(productId);
-
     const ratings = reviews.map((review) => review.rating);
 
-    if (ratings.length === 0) return 0;
+    if (ratings.length === 0) return 5;
     const total = ratings.reduce((sum, rating) => sum + rating, 0);
     return total / ratings.length;
   } catch (error) {
@@ -230,8 +223,10 @@ if (elementReview_form) {
   });
 }
 
-// const reviews = await getProductReviewsById(selectedProductId);
-
-document.addEventListener("DOMContentLoaded", () => {
-  renderReviews(selectedProductId);
+document.addEventListener("DOMContentLoaded", async () => {
+  if (window.location.pathname === "/product-details.html") {
+    reviewsById = await getProductReviewsById(selectedProductId);
+    sessionStorage.setItem("reviewsById", JSON.stringify(reviewsById));
+    await renderReviews(reviewsById);
+  }
 });

@@ -8,11 +8,10 @@ import { user_id } from "./login.js";
 import { calculateAverageRating } from "./review.js";
 import { loadAndRenderCart } from "./cart.js";
 import { selectedProductId } from "./products-all.js";
-import { fetchProductListALL } from "./products-all.js";
 import { extractProductData } from "./products-all.js";
 import { assignBtnAddToCartEvent } from "./products-all.js";
-import { createArrayRatingId } from "./products-all.js";
-import { productList } from "./products-all.js";
+import { productList, ratings } from "./products-all.js";
+import { reviewsById } from "./review.js";
 
 let variant_Index = 0;
 
@@ -85,7 +84,7 @@ async function renderProductDetail(productData) {
   const variant = variants[variant_Index];
   const isInStock = variant && variant.availability !== 0;
   const availabilityStatus = isInStock ? "In Stock" : "Sold out";
-  const averageRating = await calculateAverageRating(selectedProductId);
+  const averageRating = await calculateAverageRating(reviewsById);
   const number_review = reviews.length;
 
   const imageHTML = `
@@ -234,7 +233,7 @@ async function renderRelatedProduct(productData, id) {
   );
 
   if (!currentProduct) {
-    console.warn("Không tìm thấy sản phẩm với id này");
+    console.warn("Không tìm thấy sản phẩm với id này", id, currentProduct);
     return;
   }
 
@@ -358,11 +357,17 @@ async function loadAndRenderProductDetail() {
     if (!selectedProductId) {
       console.log("Không có ID sản phẩm được chọn.");
     }
-    // const productList = await fetchProductListALL();
-    const ratings = await createArrayRatingId();
+    // const ratings = await createArrayRatingId();
+    // console.log("ratings", ratings);
+    // console.log("productList", productList);
+
     const extractedProducts = await extractProductData(productList, ratings);
-    await getProductDetail(selectedProductId);
-    await renderRelatedProduct(extractedProducts, selectedProductId);
+    // console.log("sản phẩm chi tiết", extractedProducts);
+    if (window.location.pathname === "/product-details.html") {
+      // console.log("Đây là trang product-details.html");
+      await getProductDetail(selectedProductId);
+      await renderRelatedProduct(extractedProducts, selectedProductId);
+    }
   } catch (error) {
     console.warn("ID sản phẩm chưa được chọn", error.message);
   }

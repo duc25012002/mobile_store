@@ -9,6 +9,7 @@ import { renderStars } from "./product-details.js";
 import { extractProductData } from "./products-all.js";
 import { createArrayRatingId } from "./products-all.js";
 import { productList } from "./products-all.js";
+import { ratings } from "./products-all.js";
 
 function filterByKeyword(
   products,
@@ -352,7 +353,7 @@ function renderSearchResults(searchResults) {
 async function standardize_searchResults(event) {
   const savedSearchResults = sessionStorage.getItem("searchResults");
   const searchResults = JSON.parse(savedSearchResults);
-  const ratings = await createArrayRatingId();
+  // const ratings = await createArrayRatingId();
   const newSearchResults = await extractProductData(searchResults, ratings);
 
   if (!savedSearchResults) {
@@ -372,22 +373,24 @@ async function standardize_searchResults(event) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const savedSearchResults = sessionStorage.getItem("searchResults");
-  const searchResults = JSON.parse(savedSearchResults);
-  const ratings = await createArrayRatingId();
-  const extractedProducts = await extractProductData(searchResults, ratings);
+  if (window.location.pathname === "/shop-grid-left-sidebar.html") {
+    const savedSearchResults = sessionStorage.getItem("searchResults");
+    const searchResults = JSON.parse(savedSearchResults);
+    // const ratings = await createArrayRatingId();
 
-  if (extractedProducts) {
-    const searchKeyword = sessionStorage.getItem("searchKeyword");
-    if (searchKeyword) {
-      const searchInput = document.querySelector("#searchInput");
-      if (searchInput) {
-        searchInput.value = searchKeyword;
+    const extractedProducts = await extractProductData(searchResults, ratings);
+    if (extractedProducts) {
+      const searchKeyword = sessionStorage.getItem("searchKeyword");
+      if (searchKeyword) {
+        const searchInput = document.querySelector("#searchInput");
+        if (searchInput) {
+          searchInput.value = searchKeyword;
+        }
       }
+      renderSearchResults(extractedProducts);
+    } else {
+      console.log("không thể loading các sản phẩm tìm kiếm được");
     }
-    renderSearchResults(extractedProducts);
-  } else {
-    console.log("không thể loading các sản phẩm tìm kiếm được");
   }
 
   const searchButton = document.getElementById("searchButton");

@@ -65,7 +65,7 @@ export const getOrderById = async (orderId) => {
       console.log("Chi tiết đơn hàng:", response.data);
       return response.data;
     } else {
-      console.log("Không có chi tiết đơn hàng.");
+      // console.log("Không có chi tiết đơn hàng.");
       toastr.info("Không có chi tiết đơn hàng.");
       return null;
     }

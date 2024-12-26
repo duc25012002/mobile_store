@@ -2,7 +2,7 @@ import apiService from "./api.js";
 import { API_CONFIG } from "./api.js";
 import { token } from "./api.js";
 
-export const fetchCategories = async () => {
+const fetchCategories = async () => {
   try {
     const endpoint = "/api/category";
 
@@ -53,12 +53,16 @@ const renderCategory = async (categories) => {
   }
 };
 
+export let categorieList = JSON.parse(sessionStorage.getItem("categories"));
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const categorieList = await fetchCategories();
-  console.log("");
-  
-  if (categorieList) {
-    renderCategory(categorieList);
+  try {
+    if (window.location.pathname === "/index.html") {
+      categorieList = await fetchCategories();
+      sessionStorage.setItem("categories", JSON.stringify(categorieList));
+      renderCategory(categorieList);
+    }
+  } catch (error) {
+    console.error("Lỗi khi tải danh mục:", error.message);
   }
 });

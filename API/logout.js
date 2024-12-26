@@ -108,11 +108,6 @@ async function logout() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  const intervalId = setInterval(() => {
-    checkLoginStatus();
-    checkAuthRoutes();
-  }, 5000);
-
   window.addEventListener("storage", function (e) {
     if (e.key === "token") {
       toastr.info("Token đã thay đổi trên một tab khác!");
@@ -121,5 +116,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  window.addEventListener("beforeunload", () => clearInterval(intervalId));
+  checkLoginStatus();
+  checkAuthRoutes();
 });
