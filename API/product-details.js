@@ -61,6 +61,8 @@ export function renderStars(averageRating) {
 }
 
 async function renderProductDetail(productData) {
+  // console.log("productData", productData);
+
   const productDetailContainer = document.getElementById("product-detail");
   if (!productData) {
     toastr.error("Dữ liệu sản phẩm không hợp lệ.");
@@ -81,7 +83,7 @@ async function renderProductDetail(productData) {
     reviews = [],
   } = data || {};
 
-  const variant = variants[variant_Index];
+  const variant = variants[variant_Index] || variants[0];
   const isInStock = variant && variant.availability !== 0;
   const availabilityStatus = isInStock ? "In Stock" : "Sold out";
   const averageRating = await calculateAverageRating(reviewsById);
@@ -121,7 +123,6 @@ async function renderProductDetail(productData) {
         `<li><a style="background-color: ${variant.color_code}" data-id="${variant.id}"></a></li>`
     )
     .join("");
-
   const decodeHTML = (html) =>
     html
       .replace(/&lt;/g, "<")
@@ -178,7 +179,7 @@ async function renderProductDetail(productData) {
               <div class="qty-boxx">
                 <label>qty :</label>
                 <input type="text" placeholder="1">
-                <button class="btn-cart lg-btn">add to cart</button>
+                <button class="btn-cart lg-btn" type="button">add to cart</button>
               </div>
             </div>
           </div>
@@ -338,7 +339,8 @@ async function renderRelatedProduct(productData, id) {
 
     container.innerHTML = productHTML;
   });
-  document.querySelectorAll("[data-product-id]").forEach((element) => {
+
+  document.querySelectorAll(".btn-cart[data-product-id]").forEach((element) => {
     element.addEventListener("click", (event) => {
       const selectedProductId = element.getAttribute("data-product-id");
       if (selectedProductId) {
@@ -346,10 +348,9 @@ async function renderRelatedProduct(productData, id) {
       } else {
         console.error("Không có ID sản phẩm được chọn.");
       }
+      assignBtnAddToCartEvent();
     });
   });
-
-  assignBtnAddToCartEvent();
 }
 
 async function loadAndRenderProductDetail() {
@@ -357,15 +358,12 @@ async function loadAndRenderProductDetail() {
     if (!selectedProductId) {
       console.log("Không có ID sản phẩm được chọn.");
     }
-    // const ratings = await createArrayRatingId();
-    // console.log("ratings", ratings);
-    // console.log("productList", productList);
 
     const extractedProducts = await extractProductData(productList, ratings);
     // console.log("sản phẩm chi tiết", extractedProducts);
     if (window.location.pathname === "/product-details.html") {
-      // console.log("Đây là trang product-details.html");
-      await getProductDetail(selectedProductId);
+      const productData = await getProductDetail(selectedProductId);
+      await renderProductDetail(productData);
       await renderRelatedProduct(extractedProducts, selectedProductId);
     }
   } catch (error) {

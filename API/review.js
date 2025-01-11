@@ -14,7 +14,7 @@ export async function getProductReviewAll() {
   try {
     const response = await apiService.get(`/api/reviews`);
     if (response.status === "success") {
-      console.log("danh sách tất cả đánh giá:", response);
+      // console.log("danh sách tất cả đánh giá:", response);
       return response || [];
     } else {
       throw new Error(response.message || "Không thể lấy danh sách đánh giá.");
@@ -30,7 +30,7 @@ export const getProductReviewsById = async (productId) => {
   try {
     const response = await apiService.get(`/api/review/${productId}`);
     if (response.status === "success") {
-      console.log("danh sách đánh giá của sp có id:", productId, response);
+      // console.log("danh sách đánh giá của sp có id:", productId, response);
 
       return response.data || [];
     } else {

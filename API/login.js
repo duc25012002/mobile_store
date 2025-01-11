@@ -44,6 +44,30 @@ const handleUserId = async () => {
   }
 };
 
+export async function handleLogin(data, button) {
+  try {
+    const result = await apiService.post("/api/user/login", data);
+
+    if (result && result.status === "success") {
+      localStorage.setItem("token", result.access_token);
+      toastr.success("Đăng nhập thành công!");
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1000);
+    } else {
+      toastr.error(
+        "Đăng nhập thất bại. Vui lòng kiểm tra thông tin và thử lại."
+      );
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    toastr.error("Có lỗi xảy ra trong quá trình đăng nhập. Vui lòng thử lại.");
+  } finally {
+    button.innerHTML = "Sign In";
+    button.disabled = false;
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const loginButton = document.querySelector(".btn.btn-secondary");
 
@@ -69,33 +93,33 @@ document.addEventListener("DOMContentLoaded", () => {
         password: password,
       };
 
-      try {
-        const result = await apiService.post("/api/user/login", data);
+      // try {
+      //   const result = await apiService.post("/api/user/login", data);
 
-        if (result && result.status === "success") {
-          localStorage.setItem("token", result.access_token);
-          toastr.success("Đăng nhập thành công!");
-          setTimeout(() => {
-            window.location.href = "index.html";
-          }, 1000);
-        } else {
-          toastr.error(
-            "Đăng nhập thất bại. Vui lòng kiểm tra thông tin và thử lại."
-          );
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        toastr.error(
-          "Có lỗi xảy ra trong quá trình đăng nhập. Vui lòng thử lại."
-        );
-      } finally {
-        this.innerHTML = "Sign In";
-        this.disabled = false;
-      }
+      //   if (result && result.status === "success") {
+      //     localStorage.setItem("token", result.access_token);
+      //     toastr.success("Đăng nhập thành công!");
+      //     setTimeout(() => {
+      //       window.location.href = "index.html";
+      //     }, 1000);
+      //   } else {
+      //     toastr.error(
+      //       "Đăng nhập thất bại. Vui lòng kiểm tra thông tin và thử lại."
+      //     );
+      //   }
+      // } catch (error) {
+      //   console.error("Error:", error);
+      //   toastr.error(
+      //     "Có lỗi xảy ra trong quá trình đăng nhập. Vui lòng thử lại."
+      //   );
+      // } finally {
+      //   this.innerHTML = "Sign In";
+      //   this.disabled = false;
+      // }
+
+      await handleLogin(data, this);
     });
   }
 
   handleUserId();
-
-  
 });

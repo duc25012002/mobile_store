@@ -1,4 +1,5 @@
 import apiService from "./api.js";
+import { handleLogin } from "./login.js";
 
 async function registerUser(data) {
   try {
@@ -6,9 +7,7 @@ async function registerUser(data) {
 
     if (result.status === "success") {
       toastr.success("Đăng ký thành công");
-      setTimeout(() => {
-        window.location.href = "index.html";
-      }, 1000);
+      await handleLogin({ email: data.email, password: data.password });
     } else {
       toastr.error(result.errors.message || "Đăng ký thất bại");
     }

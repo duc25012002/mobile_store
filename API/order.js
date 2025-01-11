@@ -25,7 +25,7 @@ export const getOrderList = async () => {
       return response.data;
     } else {
       console.log("Không có đơn hàng.");
-      toastr.info("Không có đơn hàng.");
+      // toastr.info("Không có đơn hàng.");
       return [];
     }
   } catch (error) {

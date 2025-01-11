@@ -67,7 +67,7 @@ export async function createArrayRatingId(productsAll, reviewAll) {
       0
     );
 
-    console.log("kiểm tra tổng số rating:", totalRating);
+    // console.log("kiểm tra tổng số rating:", totalRating);
 
     const averageRating = totalRating / reviewsForProduct.length;
 
@@ -434,7 +434,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   ratings = await createArrayRatingId(productList, reviewAll);
   sessionStorage.setItem("ratings", JSON.stringify(ratings));
 
-  console.log("kiểm tra dữ liệu ratings sau khi tạo:", ratings);
+  // console.log("kiểm tra dữ liệu ratings sau khi tạo:", ratings);
 
   if (
     productList &&
